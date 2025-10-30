@@ -1,0 +1,44 @@
+<div class="min-vh-100 bg-light py-4">
+  <div class="container container-narrow">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h5 fw-bold mb-4"><i class="bi bi-cart3 text-primary me-2"></i>Your Cart</h3>
+        
+        <div *ngIf="(cart.items$ | async)?.length; else empty">
+          <div *ngFor="let item of (cart.items$ | async)" class="d-flex justify-content-between align-items-center py-3 border-bottom">
+            <div class="flex-fill">
+              <div class="fw-medium">{{item.dish.name}}</div>
+              <div class="small text-muted">
+                <i class="bi bi-box-seam"></i> Qty: {{item.qty}} × ₹{{item.dish.price}}
+              </div>
+            </div>
+            <div class="fw-semibold text-primary">₹{{item.dish.price * item.qty}}</div>
+          </div>
+
+          <div class="mt-4 p-3 bg-light rounded">
+            <div class="d-flex justify-content-between fw-semibold fs-5">
+              <div>Total</div>
+              <div class="text-primary">₹{{cart.getTotal()}}</div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button (click)="proceedToCheckout()" class="btn btn-primary btn-lg w-100">
+              <i class="bi bi-check-circle me-2"></i>Proceed to Checkout
+            </button>
+          </div>
+        </div>
+        
+        <ng-template #empty>
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-cart-x display-1 d-block mb-3"></i>
+            <p>Your cart is empty</p>
+            <a routerLink="/menu" class="btn btn-outline-primary mt-3">
+              <i class="bi bi-book me-2"></i>Browse Menu
+            </a>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="min-vh-100 bg-light py-4">
+  <div class="container container-narrow">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h5 fw-bold text-center mb-4"><i class="bi bi-credit-card-2-front text-primary"></i> Payment</h3>
+        <p class="text-center text-muted small">Choose a payment method</p>
+
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{errorMessage}}
+        </div>
+
+        <div class="mt-4 d-grid gap-3">
+          <button 
+            (click)="pay('razorpay')" 
+            [disabled]="processing"
+            class="btn btn-primary btn-lg text-start d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-medium"><i class="bi bi-credit-card-2-front me-2"></i>Pay Online (Razorpay)</div>
+              <div class="small">UPI, Cards, Wallets, NetBanking</div>
+            </div>
+            <i class="bi bi-arrow-right" *ngIf="!processing"></i>
+            <span class="spinner-border spinner-border-sm" *ngIf="processing"></span>
+          </button>
+
+          <button 
+            (click)="pay('cod')" 
+            [disabled]="processing"
+            class="btn btn-outline-secondary btn-lg text-start d-flex align-items-center justify-content-between">
+            <div>
+              <div class="fw-medium"><i class="bi bi-cash me-2"></i>Cash on Delivery</div>
+              <div class="small text-muted">Pay when you receive</div>
+            </div>
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="alert alert-warning mt-4 small">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Test Mode:</strong> Use Razorpay test cards
+          <div class="mt-2 font-monospace small">
+            Card: 4111 1111 1111 1111<br>
+            CVV: Any 3 digits | Expiry: Any future date
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

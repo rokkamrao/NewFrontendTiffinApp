@@ -1,0 +1,8 @@
+/* Bootstrap-based component overrides */
+
+/* Keep minimal overrides for small visuals not provided by Bootstrap */
+.avatar-img { width: 80px; height: 80px; object-fit: cover; }
+.online-dot { position: absolute; right: 6px; bottom: 6px; width: 14px; height: 14px; border-radius: 50%; background: #10b981; border: 3px solid #fff; }
+.picks .dish { background: #f8fafc; border-radius: 8px; padding: 0.5rem; margin-bottom: 0.5rem; }
+.bottom-nav .nav-link { color: #6f42c1; font-weight: 600; }
+.badge.bg-info.text-dark { background:#0ea5a0; color:#fff; }

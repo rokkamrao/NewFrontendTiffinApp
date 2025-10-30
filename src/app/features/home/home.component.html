@@ -1,0 +1,152 @@
+<div class="min-vh-100 bg-light py-4">
+  <div class="container pb-5">
+    
+    <!-- Header -->
+    <header class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h1 class="display-6 fw-bold mb-0">TiffinApp</h1>
+          <a href="" (click)="goToAccount($event)" class="btn btn-outline-primary btn-sm rounded-pill px-3" aria-label="Open account">
+            <i class="bi bi-person-circle me-1"></i>Account
+          </a>
+        </div>
+
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="me-3" style="width:80px;height:80px;position:relative;">
+            <img src="/assets/images/user-avatar.svg" alt="avatar" class="rounded-circle border shadow-sm" style="width:80px;height:80px;object-fit:cover;"/>
+            <span class="position-absolute" style="right:6px;bottom:6px;width:14px;height:14px;border-radius:50%;background:#10b981;border:3px solid #fff"></span>
+          </div>
+          <div>
+            <p class="text-uppercase text-primary fw-semibold small mb-1">Good Morning,</p>
+            <h2 class="h4 mb-0">{{getUserName()}} <span aria-hidden="true">👋</span></h2>
+          </div>
+        </div>
+
+        <div class="bg-primary bg-opacity-10 rounded-3 p-3 mb-3">
+          <h3 class="h5 fw-bold text-primary mb-2">Healthy Tiffin</h3>
+          <p class="mb-0 text-primary text-opacity-75">Subscribe, heat, enjoy your daily meals</p>
+        </div>
+
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-light rounded-circle shadow-sm" style="width:42px;height:42px;">🔔</button>
+          <button class="btn btn-light rounded-circle shadow-sm" style="width:42px;height:42px;">👤</button>
+        </div>
+
+        <div class="mb-3 d-flex flex-wrap gap-2">
+          <span class="badge bg-success bg-opacity-10 text-success px-3 py-2">♻️ Reusable tiffins</span>
+          <span class="badge bg-info bg-opacity-10 text-info px-3 py-2">🌱 Eco-friendly</span>
+          <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">🥗 Nutritious</span>
+        </div>
+
+        <a routerLink="/menu" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm" aria-label="Order today">
+          Order Today <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+    </header>
+
+    <section class="mb-4">
+      <div class="card border-0 text-white bg-gradient" style="background: linear-gradient(45deg, #28a745, #20c997)">
+        <div class="card-body">
+          <span class="badge bg-white bg-opacity-25 text-white mb-2 rounded-pill px-3">Active Subscription</span>
+          <h3 class="h4 fw-bold">Monthly Plan</h3>
+          <div class="mt-2">
+            <div class="mb-2 bg-white bg-opacity-10 p-3 rounded-3">🍽️ <strong>20</strong> meals left</div>
+            <div class="mb-2 bg-white bg-opacity-10 p-3 rounded-3">🚚 Next: <strong>Tomorrow, 12:30 PM</strong></div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-outline-light rounded-pill px-4">Pause</button>
+            <button class="btn btn-light text-success rounded-pill px-4 fw-semibold">Manage</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5 fw-bold mb-3">Quick actions</h2>
+        <div class="list-group list-group-flush mt-2">
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" routerLink="/menu">
+            <i class="bi bi-grid-3x3-gap"></i> Browse menu
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" routerLink="/checkout">
+            <i class="bi bi-bag"></i> Order
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" routerLink="/checkout">
+            <i class="bi bi-calendar-check"></i> Order today
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" routerLink="/orders">
+            <i class="bi bi-truck"></i> Track delivery
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-2" routerLink="/orders">
+            <i class="bi bi-clock-history"></i> Your orders
+          </a>
+          <a href="" (click)="goToAccount($event)" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+            <i class="bi bi-person"></i> Account
+          </a>
+          <a href="" (click)="goToAccount($event)" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+            <i class="bi bi-gear"></i> Profile & settings
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="card border-0 shadow-sm mb-4">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h5 fw-bold mb-0">Today's Picks</h2>
+          <a href="#" class="text-decoration-none">See all <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12 col-sm-6">
+            <div class="card h-100 bg-light border-0">
+              <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                  <h3 class="h6 mb-0">Paneer Palak</h3>
+                  <div class="text-muted"><span class="fw-semibold">₹120</span> • <span class="text-success">Veg</span></div>
+                </div>
+                <div class="fs-3">🥗</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-6">
+            <div class="card h-100 bg-light border-0">
+              <div class="card-body d-flex align-items-center justify-content-between">
+                <div>
+                  <h3 class="h6 mb-0">Grilled Chicken</h3>
+                  <div class="text-muted"><span class="fw-semibold">₹140</span> • <span class="text-danger">Non-Veg</span></div>
+                </div>
+                <div class="fs-3">🍗</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="navbar fixed-bottom bg-transparent py-3">
+      <div class="container d-flex justify-content-center">
+        <div class="bg-white rounded-pill px-4 py-2 shadow-lg d-flex gap-4">
+          <a routerLink="/home" routerLinkActive="text-primary" class="nav-link d-flex flex-column align-items-center" aria-current="page">
+            <i class="bi bi-house-door"></i>
+            <small>Home</small>
+          </a>
+          <a routerLink="/menu" routerLinkActive="text-primary" class="nav-link d-flex flex-column align-items-center">
+            <i class="bi bi-grid"></i>
+            <small>Menu</small>
+          </a>
+          <a routerLink="/orders" routerLinkActive="text-primary" class="nav-link d-flex flex-column align-items-center">
+            <i class="bi bi-bag"></i>
+            <small>Orders</small>
+          </a>
+          <a href="" (click)="goToAccount($event)" class="nav-link d-flex flex-column align-items-center">
+            <i class="bi bi-person"></i>
+            <small>Account</small>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+  </div>
+</div>

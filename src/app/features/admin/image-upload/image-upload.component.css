@@ -1,0 +1,54 @@
+.image-upload-page {
+  padding: 1rem 0;
+}
+
+.image-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.image-preview {
+  width: 100%;
+  height: 200px;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.image-preview.has-image {
+  border-style: solid;
+  border-color: var(--color-healthy-green);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-preview .no-image {
+  text-align: center;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+code {
+  font-size: 0.75rem;
+  word-break: break-all;
+}
+
+@media (max-width: 768px) {
+  .image-preview {
+    height: 150px;
+  }
+}

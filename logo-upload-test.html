@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Logo Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .upload-btn {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .upload-btn:hover {
+            background: #45a049;
+        }
+        #preview {
+            margin-top: 20px;
+            max-width: 200px;
+            max-height: 200px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🖼️ Quick Logo Upload</h1>
+        <p>Upload a logo to test the image system</p>
+        
+        <input type="file" id="logoInput" accept="image/*">
+        <img id="preview" alt="Preview">
+        
+        <button class="upload-btn" onclick="uploadLogo()">Upload Logo</button>
+        
+        <div class="success" id="success">
+            ✅ Logo uploaded successfully!<br>
+            <small>Now go to <a href="http://localhost:4200" target="_blank">http://localhost:4200</a> to see it!</small>
+        </div>
+        
+        <div class="info">
+            <strong>ℹ️ How this works:</strong><br>
+            1. Select an image file (PNG, JPG, or SVG)<br>
+            2. Click "Upload Logo"<br>
+            3. Image is saved to browser's localStorage<br>
+            4. Open your TiffinApp and see the logo!<br>
+            <br>
+            <strong>Note:</strong> This saves to localStorage (temporary). For permanent logo, copy your image file to:<br>
+            <code>src/assets/images/branding/logo.png</code>
+        </div>
+    </div>
+
+    <script>
+        const logoInput = document.getElementById('logoInput');
+        const preview = document.getElementById('preview');
+        const success = document.getElementById('success');
+
+        // Preview image when selected
+        logoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function uploadLogo() {
+            const file = logoInput.files[0];
+            if (!file) {
+                alert('Please select an image file first!');
+                return;
+            }
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file (PNG, JPG, SVG)');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size should be less than 5MB');
+                return;
+            }
+
+            // Read file as base64
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                
+                // Get file extension
+                const extension = file.name.split('.').pop();
+                const filename = `logo.${extension}`;
+                
+                // Save to localStorage
+                const storageKey = 'uploaded_image_branding_logo';
+                localStorage.setItem(storageKey, base64Data);
+                
+                // Also save to uploaded_images object
+                const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images') || '{}');
+                uploadedImages[`branding/${filename}`] = {
+                    base64: base64Data,
+                    filename: filename,
+                    category: 'branding',
+                    id: 'logo',
+                    uploadedAt: new Date().toISOString()
+                };
+                localStorage.setItem('uploaded_images', JSON.stringify(uploadedImages));
+                
+                // Show success message
+                success.style.display = 'block';
+                
+                console.log('Logo uploaded successfully!');
+                console.log('Storage key:', storageKey);
+                console.log('Uploaded images:', uploadedImages);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Check if logo already uploaded
+        window.addEventListener('load', function() {
+            const uploadedImages = JSON.parse(localStorage.getItem('uploaded_images') || '{}');
+            const hasLogo = Object.keys(uploadedImages).some(key => key.startsWith('branding/logo'));
+            
+            if (hasLogo) {
+                const logoData = uploadedImages[Object.keys(uploadedImages).find(k => k.startsWith('branding/logo'))];
+                if (logoData && logoData.base64) {
+                    preview.src = logoData.base64;
+                    preview.style.display = 'block';
+                    success.style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<div class="min-vh-100 bg-light py-4">
+  <div class="container pb-5">
+    <!-- Header with Search & Filters -->
+    <header class="mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 fw-bold mb-0"><i class="bi bi-book text-primary me-2"></i>Menu</h1>
+      </div>
+
+      <!-- Search bar -->
+      <div class="mb-3">
+        <div class="input-group">
+          <span class="input-group-text bg-white">
+            <i class="bi bi-search text-muted"></i>
+          </span>
+          <input type="search" class="form-control" placeholder="Search dishes, e.g., dal chawal" [(ngModel)]="searchTerm" (input)="applyFilters()" aria-label="Search dishes">
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <label class="form-label small text-muted">Diet preference</label>
+          <div class="btn-group w-100" role="group">
+            <input type="radio" class="btn-check" name="diet" id="diet-all" [checked]="selectedDiet==='all'" (change)="selectedDiet='all'; applyFilters()">
+            <label class="btn btn-outline-secondary btn-sm" for="diet-all">All</label>
+            
+            <input type="radio" class="btn-check" name="diet" id="diet-veg" [checked]="selectedDiet==='veg'" (change)="selectedDiet='veg'; applyFilters()">
+            <label class="btn btn-outline-success btn-sm" for="diet-veg"><i class="bi bi-circle-fill text-success"></i> Veg</label>
+            
+            <input type="radio" class="btn-check" name="diet" id="diet-nonveg" [checked]="selectedDiet==='non-veg'" (change)="selectedDiet='non-veg'; applyFilters()">
+            <label class="btn btn-outline-danger btn-sm" for="diet-nonveg"><i class="bi bi-circle-fill text-danger"></i> Non-veg</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small text-muted">Price Range</label>
+          <select class="form-select form-select-sm" [(ngModel)]="selectedPriceRange" (change)="applyFilters()">
+            <option value="any">Any price</option>
+            <option value="under100">Under ₹100</option>
+            <option value="100to150">₹100 - ₹150</option>
+            <option value="150plus">₹150+</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small text-muted">Tags</label>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-sm" [class.btn-primary]="selectedTags.includes('Healthy')" [class.btn-outline-secondary]="!selectedTags.includes('Healthy')" (click)="toggleTag('Healthy')">
+              <i class="bi bi-heart-pulse"></i> Healthy
+            </button>
+            <button type="button" class="btn btn-sm" [class.btn-primary]="selectedTags.includes('Spicy')" [class.btn-outline-secondary]="!selectedTags.includes('Spicy')" (click)="toggleTag('Spicy')">
+              <i class="bi bi-fire"></i> Spicy
+            </button>
+            <button type="button" class="btn btn-sm" [class.btn-primary]="selectedTags.includes('Low Cal')" [class.btn-outline-secondary]="!selectedTags.includes('Low Cal')" (click)="toggleTag('Low Cal')">
+              <i class="bi bi-speedometer"></i> Low Cal
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Menu Grid -->
+    <main>
+      <div class="row g-3">
+        <div class="col-12 col-md-6" *ngFor="let dish of filteredDishList">
+          <div class="card h-100 card-hover">
+            <div class="position-relative">
+              <img 
+                [src]="getDishImage(dish)" 
+                [alt]="dish.name" 
+                class="card-img-top" 
+                style="height:200px;object-fit:cover;"
+                (error)="$any($event.target).src = imageService.getPlaceholderImage('dish')">
+              <span class="position-absolute top-0 end-0 m-2 badge" [class.bg-success]="dish.type==='veg'" [class.bg-danger]="dish.type==='non-veg'">
+                <i class="bi" [class.bi-circle-fill]="true"></i> {{dish.type === 'veg' ? 'Veg' : 'Non-veg'}}
+              </span>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="flex-fill">
+                  <h5 class="card-title h6 mb-1">{{dish.name}}</h5>
+                  <div class="small text-muted">{{dish.tags.join(' • ')}}</div>
+                </div>
+                <div class="h5 mb-0 text-primary">₹{{dish.price}}</div>
+              </div>
+              
+              <p class="card-text small text-muted mb-3">{{dish.description}}</p>
+
+              <div class="mt-auto d-flex justify-content-between align-items-center">
+                <a [routerLink]="['/menu', dish.id]" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-info-circle me-1"></i> Details
+                </a>
+                
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-outline-secondary rounded-circle" style="width:32px;height:32px;" 
+                          (click)="decreaseQty(dish)" 
+                          [disabled]="!quantities[dish.id]">
+                    <i class="bi bi-dash"></i>
+                  </button>
+                  
+                  <div class="fw-semibold" style="min-width:24px;text-align:center;">
+                    {{quantities[dish.id] || 0}}
+                  </div>
+                  
+                  <button class="btn btn-sm btn-success rounded-circle" style="width:32px;height:32px;"
+                          (click)="addToCart(dish)">
+                    <i class="bi bi-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Floating Cart Preview -->
+    <div class="position-fixed bottom-0 start-50 translate-middle-x mb-4" style="z-index:1050;">
+      <div class="bg-primary text-white rounded-pill px-4 py-3 shadow-lg d-flex align-items-center gap-3" *ngIf="getTotalItems() > 0">
+        <div>
+          <small class="d-block"><i class="bi bi-cart3"></i> Items: {{getTotalItems()}}</small>
+          <strong class="fs-5">₹{{getTotalAmount()}}</strong>
+        </div>
+        <a routerLink="/cart" class="btn btn-light btn-sm rounded-pill px-3">
+          View Cart <i class="bi bi-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

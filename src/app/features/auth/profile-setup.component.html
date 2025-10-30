@@ -1,0 +1,154 @@
+<div class="setup-container">
+  <!-- Progress Bar -->
+  <div class="progress-bar-container">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="getProgress()"></div>
+    </div>
+    <p style="text-align: center; margin-top: 8px; font-size: 12px; color: #757575;">
+      Step {{ currentStep }} of {{ totalSteps }}
+    </p>
+  </div>
+
+  <div class="step-content">
+    <!-- Step 1: Basic Info -->
+    <div *ngIf="currentStep === 1">
+      <h2 class="step-title">Welcome! Let's get to know you</h2>
+      <p class="step-subtitle">Tell us your name and email to personalize your experience</p>
+
+      <div class="input-group">
+        <label class="input-label">Full Name *</label>
+        <input 
+          type="text" 
+          class="input-field"
+          [class.error]="nameError"
+          [(ngModel)]="name"
+          placeholder="Enter your full name">
+        <div class="error-message" *ngIf="nameError">⚠️ {{ nameError }}</div>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Email Address</label>
+        <input 
+          type="email" 
+          class="input-field"
+          [class.error]="emailError"
+          [(ngModel)]="email"
+          placeholder="your@email.com (optional)">
+        <div class="error-message" *ngIf="emailError">⚠️ {{ emailError }}</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Dietary Preferences -->
+    <div *ngIf="currentStep === 2">
+      <h2 class="step-title">Your Dietary Preferences</h2>
+      <p class="step-subtitle">Select your dietary preferences to get personalized meal recommendations</p>
+
+      <div class="preferences-grid">
+        <div 
+          *ngFor="let pref of dietaryPreferences"
+          class="preference-card"
+          [class.selected]="pref.selected"
+          (click)="togglePreference(pref)">
+          <div class="preference-icon">{{ pref.icon }}</div>
+          <div class="preference-name">{{ pref.name }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Address -->
+    <div *ngIf="currentStep === 3">
+      <h2 class="step-title">Add Delivery Address</h2>
+      <p class="step-subtitle">Where should we deliver your healthy meals?</p>
+
+      <div class="address-types">
+        <button 
+          class="type-button"
+          [class.selected]="addressType === 'home'"
+          (click)="addressType = 'home'">
+          🏠 Home
+        </button>
+        <button 
+          class="type-button"
+          [class.selected]="addressType === 'work'"
+          (click)="addressType = 'work'">
+          💼 Work
+        </button>
+        <button 
+          class="type-button"
+          [class.selected]="addressType === 'other'"
+          (click)="addressType = 'other'">
+          📍 Other
+        </button>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Address Line 1 *</label>
+        <input 
+          type="text" 
+          class="input-field"
+          [(ngModel)]="addressLine1"
+          placeholder="Flat/House No., Building Name">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Address Line 2</label>
+        <input 
+          type="text" 
+          class="input-field"
+          [(ngModel)]="addressLine2"
+          placeholder="Street, Area, Landmark">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="input-group">
+          <label class="input-label">City *</label>
+          <input 
+            type="text" 
+            class="input-field"
+            [(ngModel)]="city"
+            placeholder="City">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Pincode *</label>
+          <input 
+            type="tel" 
+            class="input-field"
+            [(ngModel)]="pincode"
+            maxlength="6"
+            placeholder="6-digit PIN">
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button 
+        class="btn btn-secondary"
+        *ngIf="currentStep > 1"
+        (click)="previousStep()">
+        Back
+      </button>
+      <button 
+        class="btn btn-secondary"
+        *ngIf="currentStep < totalSteps"
+        (click)="skip()">
+        Skip
+      </button>
+      <button 
+        class="btn btn-primary"
+        *ngIf="currentStep < totalSteps"
+        (click)="nextStep()">
+        Next
+      </button>
+      <button 
+        class="btn btn-primary"
+        *ngIf="currentStep === totalSteps"
+        (click)="completeSetup()"
+        [disabled]="isLoading">
+        <span *ngIf="!isLoading">Complete Setup</span>
+        <span *ngIf="isLoading">Setting up...</span>
+      </button>
+    </div>
+  </div>
+</div>

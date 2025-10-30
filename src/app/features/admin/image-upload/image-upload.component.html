@@ -1,0 +1,145 @@
+<div class="image-upload-page">
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <button class="btn btn-link text-decoration-none p-0 mb-2" (click)="goBack()">
+        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+      </button>
+      <h2 class="fw-bold mb-1">Image Management</h2>
+      <p class="text-muted">Upload and manage all your application images</p>
+    </div>
+    <div class="text-end">
+      <div class="badge bg-success p-2 mb-2">
+        {{ uploadedCount }} / {{ totalCount }} Uploaded
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="uploadAll()">
+          <i class="bi bi-cloud-upload me-2"></i>Upload All
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Category</label>
+          <select class="form-select" [(ngModel)]="selectedCategory">
+            <option *ngFor="let cat of categories" [value]="cat">
+              {{ cat === 'all' ? 'All Categories' : (cat | titlecase) }}
+            </option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold">Search</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="Search images..."
+            [(ngModel)]="searchTerm">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Grid -->
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let image of filteredImages">
+      <div class="card h-100 border-0 shadow-sm image-card">
+        <div class="card-body">
+          <!-- Category Badge -->
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <span class="badge bg-light text-dark">
+              <i class="bi {{ getCategoryIcon(image.category) }} me-1"></i>
+              {{ image.category | titlecase }}
+            </span>
+            <span *ngIf="image.uploaded" class="badge bg-success">
+              <i class="bi bi-check-circle me-1"></i>Uploaded
+            </span>
+          </div>
+
+          <!-- Image Name -->
+          <h6 class="fw-semibold mb-3">{{ image.name }}</h6>
+
+          <!-- Image Preview -->
+          <div class="image-preview mb-3" [class.has-image]="image.preview">
+            <img *ngIf="image.preview" [src]="image.preview" [alt]="image.name">
+            <div *ngIf="!image.preview" class="no-image">
+              <i class="bi bi-image" style="font-size: 3rem; color: #ccc;"></i>
+              <p class="text-muted small mt-2">No image selected</p>
+            </div>
+          </div>
+
+          <!-- File Input -->
+          <div class="mb-3">
+            <label class="btn btn-outline-primary btn-sm w-100">
+              <i class="bi bi-folder2-open me-2"></i>Choose File
+              <input 
+                type="file" 
+                class="d-none" 
+                accept="image/*"
+                (change)="onFileSelected($event, image)">
+            </label>
+          </div>
+
+          <!-- File Info -->
+          <div *ngIf="image.file" class="small text-muted mb-3">
+            <i class="bi bi-file-earmark me-1"></i>
+            {{ image.file.name }}
+            <br>
+            <i class="bi bi-hdd me-1"></i>
+            {{ (image.file.size / 1024).toFixed(2) }} KB
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2">
+            <button 
+              class="btn btn-success btn-sm flex-grow-1"
+              [disabled]="!image.file || image.uploaded"
+              (click)="uploadImage(image)">
+              <i class="bi bi-cloud-upload me-1"></i>
+              {{ image.uploaded ? 'Uploaded' : 'Upload' }}
+            </button>
+            <button 
+              class="btn btn-outline-danger btn-sm"
+              *ngIf="image.file"
+              (click)="removeImage(image)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+          <!-- Recommended Path -->
+          <div class="mt-3 p-2 bg-light rounded small">
+            <strong>Path:</strong><br>
+            <code class="text-success">assets/images/{{ image.category }}/{{ image.id }}.*</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="filteredImages.length === 0" class="text-center py-5">
+    <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
+    <p class="text-muted mt-3">No images found matching your criteria</p>
+  </div>
+
+  <!-- Info Card -->
+  <div class="card border-0 bg-light mt-4">
+    <div class="card-body">
+      <h6 class="fw-semibold mb-3">
+        <i class="bi bi-info-circle me-2"></i>Image Upload Guidelines
+      </h6>
+      <ul class="small mb-0">
+        <li>Supported formats: JPG, PNG, SVG, WebP</li>
+        <li>Maximum file size: 5MB</li>
+        <li>Recommended logo size: 200x200px (SVG preferred)</li>
+        <li>Recommended dish image size: 800x600px</li>
+        <li>Use descriptive filenames</li>
+        <li>Images will be automatically optimized during upload</li>
+      </ul>
+    </div>
+  </div>
+</div>

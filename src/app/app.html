@@ -1,0 +1,57 @@
+<!-- App shell: Bootstrap header + router outlet + bottom nav -->
+
+<header *ngIf="!hideShell" class="bg-white shadow-sm py-3">
+  <div class="container container-narrow d-flex align-items-center justify-content-between">
+    <a href="" (click)="goToHome($event)" class="d-flex align-items-center gap-3 text-decoration-none text-dark">
+      <!-- Default logo (letter T) - always visible, will be hidden if image loads -->
+      <div 
+        id="default-logo"
+        class="rounded d-flex align-items-center justify-content-center text-white fw-bold"
+        style="width:40px;height:40px;background: var(--color-healthy-green);">T</div>
+      
+      <!-- Uploaded/Asset logo - hidden by default, shown if image loads -->
+      <img 
+        id="custom-logo"
+        [src]="logoUrl" 
+        alt="TiffinApp Logo"
+        class="rounded"
+        style="width:40px;height:40px;object-fit:contain;display:none;"
+        (load)="onLogoLoad($event)"
+        (error)="onLogoError($event)">
+      
+      <div>
+        <div class="small text-muted">Good Morning</div>
+        <div class="fw-semibold">TiffinApp</div>
+      </div>
+    </a>
+    <nav>
+      <a href="" (click)="goToAccount($event)" class="link-dark small text-decoration-none">
+        <i class="bi bi-person-circle me-1"></i>Account
+      </a>
+    </nav>
+  </div>
+  
+</header>
+
+<main [class.py-3]="!hideShell">
+  <div [class.container]="!hideShell" [class.container-narrow]="!hideShell">
+    <router-outlet></router-outlet>
+  </div>
+</main>
+
+<nav *ngIf="!hideShell" class="fixed-bottom bg-white border-top py-2">
+  <div class="container container-narrow d-flex justify-content-around">
+    <a routerLink="/home" class="text-decoration-none">
+      <i class="bi bi-house-door me-1"></i>Home
+    </a>
+    <a routerLink="/menu" class="text-decoration-none">
+      <i class="bi bi-list-ul me-1"></i>Menu
+    </a>
+    <a routerLink="/orders" class="text-decoration-none">
+      <i class="bi bi-receipt me-1"></i>Orders
+    </a>
+    <a href="" (click)="goToAccount($event)" class="text-decoration-none">
+      <i class="bi bi-person me-1"></i>Account
+    </a>
+  </div>
+</nav>

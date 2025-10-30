@@ -1,0 +1,81 @@
+<div class="otp-container">
+  <div class="otp-header">
+    <button class="back-button" (click)="editPhoneNumber()">
+      ←
+    </button>
+    
+    <h1 class="otp-title">Verify OTP</h1>
+    <p class="otp-subtitle">
+      Enter the 6-digit code sent to
+      <br>
+      <span class="phone-display">
+        {{ getMaskedPhone() }}
+        <a class="edit-link" (click)="editPhoneNumber()">Edit</a>
+      </span>
+    </p>
+  </div>
+
+  <div class="otp-content">
+    <div class="otp-inputs-wrapper">
+      <!-- Hidden master input that captures all typing reliably (prevents double-typing) -->
+      <input
+        #otpMaster
+        type="tel"
+        class="visually-hidden"
+        style="position:absolute;opacity:0;width:0;height:0;border:0;padding:0;"
+        maxlength="6"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        (input)="onMasterInput($any($event.target).value)"
+        (keydown)="onMasterKeydown($event)"
+      />
+
+      <div class="otp-inputs" (click)="focusMaster()" (paste)="onContainerPaste($event)">
+        <input
+          *ngFor="let digit of otpDigits; let i = index"
+          [id]="'otp-' + i"
+          type="text"
+          class="otp-input"
+          [class.filled]="digit"
+          [value]="otpDigits[i]"
+          readonly
+          (click)="focusMaster()"
+        >
+      </div>
+
+      <div class="error-message" *ngIf="otpError">
+        <span class="error-icon">⚠️</span>
+        <span>{{ otpError }}</span>
+      </div>
+    </div>
+
+    <div class="resend-section">
+      <p class="resend-text">
+        <span *ngIf="!canResend">Resend OTP in <span class="timer">{{ resendTimer }}s</span></span>
+        <span *ngIf="canResend">Didn't receive the code?</span>
+      </p>
+      <button 
+        class="resend-button" 
+        (click)="resendOTP()"
+        [disabled]="!canResend">
+        Resend OTP
+      </button>
+    </div>
+
+    <button 
+      class="verify-button" 
+      (click)="verifyOTP()"
+      [disabled]="isLoading">
+      <span class="loading-spinner" *ngIf="isLoading"></span>
+      <span *ngIf="!isLoading">Verify & Continue</span>
+    </button>
+
+    <div class="info-box">
+      <div class="info-title">💡 Quick Tip</div>
+      <div class="info-text">
+        For demo purposes, you can use <strong>123456</strong> as the OTP code.
+      </div>
+    </div>
+  </div>
+</div>
+

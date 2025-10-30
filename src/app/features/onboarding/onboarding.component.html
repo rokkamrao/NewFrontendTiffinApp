@@ -1,0 +1,96 @@
+<!-- Carousel Step -->
+<div *ngIf="currentStep === 'carousel'" class="carousel-container">
+  <div class="carousel-content">
+    <div class="slide-icon">{{ slides[currentSlide].image }}</div>
+    <h2 class="slide-title">{{ slides[currentSlide].title }}</h2>
+    <p class="slide-description">{{ slides[currentSlide].description }}</p>
+  </div>
+
+  <div class="carousel-dots">
+    <div 
+      *ngFor="let slide of slides; let i = index"
+      class="dot"
+      [class.active]="i === currentSlide"
+      (click)="goToSlide(i)">
+    </div>
+  </div>
+
+  <div class="carousel-actions">
+    <button class="btn btn-secondary" (click)="skipOnboarding()">Skip</button>
+    <button class="btn btn-primary" (click)="proceedToLocation()">Next</button>
+  </div>
+</div>
+
+<!-- Location Permission Step -->
+<div *ngIf="currentStep === 'location'" class="location-container">
+  <div class="location-content">
+    <div class="location-icon">📍</div>
+    <h2 class="location-title">Enable Location</h2>
+    <p class="location-description">
+      We need your location to show available menus and ensure timely delivery in your area.
+    </p>
+
+    <div class="location-features">
+      <div class="feature-item">
+        <div class="feature-icon">🚚</div>
+        <div class="feature-text">
+          <div class="feature-title">Accurate Delivery</div>
+          <div class="feature-description">Get precise delivery times based on your location</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">🍽️</div>
+        <div class="feature-text">
+          <div class="feature-title">Local Menus</div>
+          <div class="feature-description">See dishes available in your area</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-text">
+          <div class="feature-title">Quick Checkout</div>
+          <div class="feature-description">Auto-fill address details instantly</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="carousel-actions">
+      <button class="btn btn-secondary" (click)="currentStep = 'city'">Skip</button>
+      <button class="btn btn-primary" (click)="requestLocation()">Allow Location</button>
+    </div>
+  </div>
+</div>
+
+<!-- City Selection Step -->
+<div *ngIf="currentStep === 'city'" class="city-container">
+  <div class="city-header">
+    <h2 class="city-title">Select Your City</h2>
+    <p class="city-subtitle">Choose from our available service areas</p>
+  </div>
+
+  <div class="city-grid">
+    <div 
+      *ngFor="let city of cities"
+      class="city-card"
+      [class.available]="city.available"
+      [class.unavailable]="!city.available"
+      (click)="selectCity(city)">
+      <div class="city-name">{{ city.name }}</div>
+      <span 
+        class="city-status"
+        [class.status-available]="city.available"
+        [class.status-coming-soon]="!city.available">
+        {{ city.available ? 'Available' : 'Coming Soon' }}
+      </span>
+      <button 
+        *ngIf="!city.available"
+        class="notify-btn"
+        (click)="notifyMe(city.name); $event.stopPropagation()">
+        Notify Me
+      </button>
+    </div>
+  </div>
+</div>
+

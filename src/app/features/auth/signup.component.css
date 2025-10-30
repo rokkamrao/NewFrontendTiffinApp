@@ -1,0 +1,8 @@
+.strength { height: 6px; background: #e9ecef; border-radius: 6px; overflow: hidden; }
+.strength .bar { height: 100%; width: 33%; transition: all .3s ease; }
+.strength .bar.weak { background: #dc3545; width: 33%; }
+.strength .bar.medium { background: #fd7e14; width: 66%; }
+.strength .bar.strong { background: #28a745; width: 100%; }
+
+.btn-outline-success { border-radius: 999px; }
+.btn-success { border-radius: 999px; }

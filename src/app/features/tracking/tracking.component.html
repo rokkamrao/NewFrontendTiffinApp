@@ -1,0 +1,128 @@
+<div class="min-vh-100 bg-light py-4">
+  <div class="container container-narrow">
+    <div class="card mb-3">
+      <div class="card-body d-flex gap-3 align-items-start">
+        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center" style="width:56px;height:56px;">
+          <i class="bi bi-truck fs-3 text-primary"></i>
+        </div>
+        <div class="flex-fill">
+          <div class="small text-muted">Order #{{orderId}}</div>
+          <div class="h5 mb-1 fw-bold">Out for Delivery</div>
+          <div class="small text-success">
+            <i class="bi bi-clock-fill me-1"></i>ETA: 18 minutes
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-3 text-muted">
+          <i class="bi bi-list-check me-2"></i>Delivery Progress
+        </h6>
+        <div class="progress mb-2" style="height:8px;">
+          <div class="progress-bar bg-success" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="d-flex justify-content-between small">
+          <div class="text-center" style="width:25%;">
+            <i class="bi bi-check-circle-fill text-success d-block mb-1"></i>
+            <span class="text-success fw-semibold">Preparing</span>
+          </div>
+          <div class="text-center" style="width:25%;">
+            <i class="bi bi-arrow-right-circle-fill text-primary d-block mb-1"></i>
+            <span class="text-primary fw-semibold">On the Way</span>
+          </div>
+          <div class="text-center" style="width:25%;">
+            <i class="bi bi-circle text-muted d-block mb-1"></i>
+            <span class="text-muted">Nearby</span>
+          </div>
+          <div class="text-center" style="width:25%;">
+            <i class="bi bi-circle text-muted d-block mb-1"></i>
+            <span class="text-muted">Delivered</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body bg-light" style="min-height:240px;">
+        <h6 class="card-subtitle mb-3 text-muted">
+          <i class="bi bi-geo-alt-fill me-2"></i>Live Tracking
+        </h6>
+        
+        <div *ngIf="latestLocation" class="mb-3">
+          <div class="alert alert-success">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i>
+              <strong>{{ getActionLabel(latestLocation.action) }}</strong>
+            </div>
+            <small class="d-block text-muted">
+              {{ latestLocation.timestamp | date:'medium' }}
+            </small>
+            <button 
+              class="btn btn-sm btn-outline-primary mt-2"
+              (click)="viewOnMap(latestLocation.latitude, latestLocation.longitude)">
+              <i class="bi bi-map me-1"></i>
+              View Current Location
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!latestLocation" class="text-center py-4">
+          <i class="bi bi-geo-alt text-muted" style="font-size: 3rem;"></i>
+          <p class="text-muted mb-0 mt-2">Waiting for delivery partner location...</p>
+        </div>
+
+        <!-- Location History -->
+        <div *ngIf="locationHistory.length > 0">
+          <h6 class="text-muted small mb-2">Location Updates</h6>
+          <div class="timeline">
+            <div *ngFor="let loc of locationHistory.slice(0, 5)" class="mb-2 pb-2 border-bottom">
+              <div class="d-flex align-items-start gap-2">
+                <i class="bi bi-geo-alt-fill text-primary"></i>
+                <div class="flex-grow-1">
+                  <small class="fw-semibold d-block">{{ getActionLabel(loc.action) }}</small>
+                  <small class="text-muted">{{ loc.timestamp | date:'short' }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-3 text-muted">
+          <i class="bi bi-person-circle me-2"></i>Delivery Partner
+        </h6>
+        <div class="d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+            <i class="bi bi-person-fill fs-4 text-secondary"></i>
+          </div>
+          <div class="flex-fill">
+            <div class="fw-semibold">Rahul Kumar</div>
+            <div class="small text-muted">
+              <i class="bi bi-star-fill text-warning me-1"></i>4.8 rating
+            </div>
+          </div>
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-telephone"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-subtitle mb-2 text-muted">
+          <i class="bi bi-box-seam me-2"></i>Smart Tiffin
+        </h6>
+        <div class="d-flex align-items-center gap-2 small text-muted">
+          <i class="bi bi-shield-check text-success"></i>
+          <span>Last sanitized: Today 07:00 AM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
