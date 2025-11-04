@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DeliveryService } from '../services/delivery.service';
+import { DeliveryPartnerLoginRequest } from '../models/delivery-partner.model';
 
 @Component({
   selector: 'app-delivery-login',
@@ -31,31 +33,52 @@ import { Router } from '@angular/router';
                       <input 
                         type="tel" 
                         class="form-control" 
-                        [(ngModel)]="phone"
+                        [(ngModel)]="loginRequest.phone"
                         name="phone"
                         placeholder="Enter 10-digit mobile number"
                         pattern="[0-9]{10}"
+                        maxlength="10"
                         required>
                     </div>
                   </div>
 
                   <div class="mb-4">
                     <label class="form-label">Password</label>
-                    <input 
-                      type="password" 
-                      class="form-control" 
-                      [(ngModel)]="password"
-                      name="password"
-                      placeholder="Enter your password"
-                      required>
+                    <div class="input-group">
+                      <input 
+                        [type]="showPassword ? 'text' : 'password'" 
+                        class="form-control" 
+                        [(ngModel)]="loginRequest.password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required>
+                      <button 
+                        type="button" 
+                        class="btn btn-outline-secondary"
+                        (click)="togglePassword()">
+                        <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                      </button>
+                    </div>
                   </div>
+
+                  @if (error) {
+                    <div class="alert alert-danger">
+                      <i class="bi bi-exclamation-circle me-2"></i>
+                      {{ error }}
+                    </div>
+                  }
 
                   <button 
                     type="submit" 
                     class="btn btn-primary w-100 py-2 mb-3"
-                    [disabled]="!phone || !password">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
-                    Sign In
+                    [disabled]="!loginRequest.phone || !loginRequest.password || isLoading">
+                    @if (isLoading) {
+                      <span class="spinner-border spinner-border-sm me-2"></span>
+                      Signing In...
+                    } @else {
+                      <i class="bi bi-box-arrow-in-right me-2"></i>
+                      Sign In
+                    }
                   </button>
 
                   <div class="text-center">
@@ -66,11 +89,6 @@ import { Router } from '@angular/router';
                   </div>
                 </form>
 
-                <div *ngIf="error" class="alert alert-danger mt-3">
-                  <i class="bi bi-exclamation-circle me-2"></i>
-                  {{ error }}
-                </div>
-
                 <div class="mt-4 p-3 bg-light rounded">
                   <small class="text-muted">
                     <strong>Demo Credentials:</strong><br>
@@ -78,6 +96,16 @@ import { Router } from '@angular/router';
                     Password: delivery123
                   </small>
                 </div>
+
+                <!-- Online Status Indicator -->
+                @if (isOnline !== null) {
+                  <div class="mt-3 text-center">
+                    <span class="badge" [class]="isOnline ? 'bg-success' : 'bg-secondary'">
+                      <i [class]="isOnline ? 'bi bi-wifi' : 'bi bi-wifi-off'" class="me-1"></i>
+                      {{ isOnline ? 'Online' : 'Offline' }}
+                    </span>
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -89,42 +117,124 @@ import { Router } from '@angular/router';
     .delivery-login {
       background-attachment: fixed;
     }
+    
+    .input-group .btn-outline-secondary {
+      border-left: none;
+    }
+    
+    .spinner-border-sm {
+      width: 1rem;
+      height: 1rem;
+    }
+    
+    .badge {
+      font-size: 0.8rem;
+    }
   `]
 })
 export class DeliveryLoginComponent {
-  phone = '';
-  password = '';
+  loginRequest: DeliveryPartnerLoginRequest = {
+    phone: '',
+    password: ''
+  };
+  
   error = '';
+  isLoading = false;
+  showPassword = false;
+  isOnline: boolean | null = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private deliveryService: DeliveryService
+  ) {
     // Check if already logged in
-    const isDeliveryLoggedIn = localStorage.getItem('deliveryLoggedIn');
-    if (isDeliveryLoggedIn === 'true') {
+    if (this.deliveryService.isLoggedIn()) {
       this.router.navigate(['/delivery/dashboard']);
+      return;
+    }
+
+    // Check online status
+    this.checkOnlineStatus();
+  }
+
+  private checkOnlineStatus(): void {
+    // Check if we're in a browser environment
+    if (typeof navigator !== 'undefined' && typeof window !== 'undefined') {
+      this.isOnline = navigator.onLine;
+      
+      window.addEventListener('online', () => {
+        this.isOnline = true;
+      });
+      
+      window.addEventListener('offline', () => {
+        this.isOnline = false;
+      });
+    } else {
+      // Default to online during SSR
+      this.isOnline = true;
     }
   }
 
-  login(event: Event) {
+  login(event: Event): void {
     event.preventDefault();
+    
+    if (!this.validateInput()) {
+      return;
+    }
+
+    this.isLoading = true;
     this.error = '';
 
-    // Demo login validation
-    if (this.phone === '9876543210' && this.password === 'delivery123') {
-      const deliveryPerson = {
-        id: 'DEL001',
-        name: 'Rajesh Kumar',
-        phone: '+91 9876543210',
-        vehicleNumber: 'KA-01-AB-1234',
-        rating: 4.8,
-        deliveriesCompleted: 1250
-      };
+    this.deliveryService.login(this.loginRequest).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          console.log('[DeliveryLogin] Login successful:', response.partner?.name);
+          this.router.navigate(['/delivery/dashboard']);
+        } else {
+          this.error = response.message || 'Login failed. Please try again.';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error('[DeliveryLogin] Login error:', error);
+        this.error = error.message || 'An error occurred during login. Please try again.';
+      }
+    });
+  }
 
-      localStorage.setItem('deliveryLoggedIn', 'true');
-      localStorage.setItem('deliveryPerson', JSON.stringify(deliveryPerson));
-      
-      this.router.navigate(['/delivery/dashboard']);
-    } else {
-      this.error = 'Invalid phone number or password';
+  private validateInput(): boolean {
+    if (!this.loginRequest.phone) {
+      this.error = 'Please enter your phone number';
+      return false;
+    }
+
+    if (!/^[6-9]\d{9}$/.test(this.loginRequest.phone)) {
+      this.error = 'Please enter a valid 10-digit phone number starting with 6-9';
+      return false;
+    }
+
+    if (!this.loginRequest.password) {
+      this.error = 'Please enter your password';
+      return false;
+    }
+
+    if (this.loginRequest.password.length < 6) {
+      this.error = 'Password must be at least 6 characters';
+      return false;
+    }
+
+    this.error = '';
+    return true;
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  onInputChange(): void {
+    if (this.error) {
+      this.error = '';
     }
   }
 }

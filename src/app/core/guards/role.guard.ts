@@ -1,5 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 
 function decodeJwt(token: string): any | null {
   try {
@@ -13,6 +15,14 @@ function decodeJwt(token: string): any | null {
 
 export const roleGuard = (requiredRoles: string[] = ['ADMIN']): CanActivateFn => () => {
   const router = inject(Router);
+  const platformId = inject(PLATFORM_ID);
+  
+  // Skip localStorage check during SSR
+  if (!isPlatformBrowser(platformId)) {
+    console.log('[RoleGuard] SSR detected, allowing access');
+    return true;
+  }
+  
   try {
     const token = localStorage.getItem('authToken');
     

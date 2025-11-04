@@ -6,70 +6,128 @@
   </div>
 
   <!-- Info message for redirected users -->
-  <div *ngIf="returnUrl !== '/home'" class="alert-info">
-    <i class="bi bi-info-circle"></i>
-    <span>Please login to continue with your order</span>
-  </div>
+  @if (returnUrl !== '/home') {
+    <div class="alert-info">
+      <i class="bi bi-info-circle"></i>
+      <span>Please login to continue with your order</span>
+    </div>
+  }
 
   <div class="login-content">
-    <div class="input-group">
-      <label class="input-label">Email or Phone Number</label>
-      <div class="input-wrapper" [class.error]="errorMessage">
-        <input 
-          type="text" 
-          class="text-input" 
-          placeholder="Enter email or 10-digit phone number"
-          [(ngModel)]="emailOrPhone"
-          (input)="onInputChange()"
-          autocomplete="username">
-      </div>
-    </div>
+    <!-- Phone Input Step -->
+    @if (state.step === 'phone') {
+      <div class="auth-step">
+        <div class="input-group">
+          <label class="input-label">Phone Number</label>
+          <div class="input-wrapper" [class.error]="state.errorMessage">
+            <input 
+              type="tel" 
+              class="text-input" 
+              placeholder="Enter your 10-digit phone number"
+              [(ngModel)]="state.phone"
+              (input)="onInputChange()"
+              maxlength="10"
+              autocomplete="tel">
+          </div>
+          <div class="input-hint">We'll send you an OTP to verify your number</div>
+        </div>
 
-    <div class="input-group">
-      <label class="input-label">Password</label>
-      <div class="input-wrapper password-wrapper" [class.error]="errorMessage">
-        <input 
-          [type]="showPassword ? 'text' : 'password'" 
-          class="text-input password-input" 
-          placeholder="Enter your password"
-          [(ngModel)]="password"
-          (input)="onInputChange()"
-          autocomplete="current-password">
+        @if (state.errorMessage) {
+          <div class="error-message">
+            <span class="error-icon">⚠️</span>
+            <span>{{ state.errorMessage }}</span>
+          </div>
+        }
+
         <button 
-          type="button"
-          class="toggle-password"
-          (click)="togglePasswordVisibility()"
-          tabindex="-1">
-          <span *ngIf="!showPassword">👁️</span>
-          <span *ngIf="showPassword">🙈</span>
+          class="btn btn-primary" 
+          (click)="sendOtp()"
+          [disabled]="state.isLoading || !state.phone">
+          @if (state.isLoading) {
+            <span class="loading-spinner"></span>
+          } @else {
+            <span>Send OTP</span>
+          }
         </button>
       </div>
-    </div>
+    }
 
-    <div class="error-message" *ngIf="errorMessage">
-      <span class="error-icon">⚠️</span>
-      <span>{{ errorMessage }}</span>
-    </div>
+    <!-- OTP Verification Step -->
+    @if (state.step === 'otp') {
+      <div class="auth-step">
+        <div class="otp-header">
+          <h3>Enter OTP</h3>
+          <p>We've sent a 6-digit code to</p>
+          <div class="phone-display">
+            <span>+91 {{ state.phone }}</span>
+            <button type="button" class="edit-phone" (click)="editPhoneNumber()">✏️</button>
+          </div>
+        </div>
 
-    <button 
-      class="btn btn-primary" 
-      (click)="login()"
-      [disabled]="isLoading">
-      <span class="loading-spinner" *ngIf="isLoading"></span>
-      <span *ngIf="!isLoading">Sign In</span>
-    </button>
+        <div class="input-group">
+          <label class="input-label">OTP Code</label>
+          <div class="input-wrapper otp-wrapper" [class.error]="state.errorMessage">
+            <input 
+              type="text" 
+              class="text-input otp-input" 
+              placeholder="Enter 6-digit OTP"
+              [(ngModel)]="state.otp"
+              (input)="onInputChange()"
+              maxlength="6"
+              autocomplete="one-time-code">
+          </div>
+        </div>
 
-    <div class="forgot-password">
-      <a href="/auth/forgot-password">Forgot Password?</a>
-    </div>
+        @if (state.errorMessage) {
+          <div class="error-message">
+            <span class="error-icon">⚠️</span>
+            <span>{{ state.errorMessage }}</span>
+          </div>
+        }
 
+        <button 
+          class="btn btn-primary" 
+          (click)="verifyOtp()"
+          [disabled]="state.isLoading || state.otp.length !== 6">
+          @if (state.isLoading) {
+            <span class="loading-spinner"></span>
+          } @else {
+            <span>Verify OTP</span>
+          }
+        </button>
+
+        <!-- Resend OTP Section -->
+        <div class="resend-section">
+          @if (!state.canResend) {
+            <div class="resend-cooldown">
+              Resend OTP in {{ state.resendCooldown }}s
+            </div>
+          }
+          @if (state.canResend) {
+            <button 
+              type="button"
+              class="btn btn-link" 
+              (click)="resendOtp()"
+              [disabled]="state.isLoading">
+              @if (!state.isLoading) {
+                <span>Resend OTP</span>
+              } @else {
+                <span>Sending...</span>
+              }
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Google Sign-In (Available on both steps) -->
     <div class="divider">
       <div class="divider-line"></div>
       <span class="divider-text">OR</span>
       <div class="divider-line"></div>
     </div>
 
-    <button class="btn btn-google" (click)="loginWithGoogle()">
+    <button class="btn btn-google" (click)="loginWithGoogle()" [disabled]="state.isLoading">
       <svg class="google-icon" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
         <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>

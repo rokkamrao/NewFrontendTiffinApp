@@ -43,14 +43,20 @@ export class AccountComponent{
   });
   
   constructor(private auth: AuthService, private router: Router){ 
-    // Redirect ONLY if not logged in. If logged in but no profile, show a minimal page.
+    // Check if user is authenticated using proper authentication check
     if (isPlatformBrowser(this.platformId)) {
-      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      if (!isLoggedIn) {
+      const authToken = localStorage.getItem('authToken');
+      const user = this.auth.getUser();
+      
+      // If no token and no user, redirect to login
+      if (!authToken && !user) {
+        console.log('[Account] No authentication found, redirecting to login');
         this.router.navigate(['/auth/login']);
         return;
       }
-      this.fallbackPhone = localStorage.getItem('userPhone');
+      
+      // Store fallback phone for display purposes
+      this.fallbackPhone = user?.phone || localStorage.getItem('userPhone');
     }
 
     this.user = this.auth.getUser();
@@ -171,9 +177,10 @@ export class AccountComponent{
     this.auth.logout(); 
     this.user = null;
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('userPhone');
+      // Remove authentication-related items
+      localStorage.removeItem('authToken');
       localStorage.removeItem('userProfile');
+      localStorage.removeItem('userPhone');
     }
     this.router.navigate(['/auth/login']);
   }

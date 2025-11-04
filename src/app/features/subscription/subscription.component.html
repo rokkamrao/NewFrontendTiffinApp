@@ -1,93 +1,471 @@
-<div class="min-vh-100 bg-light py-4">
-  <div class="container container-narrow">
-    <div class="card mb-3">
-      <div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h5 class="card-title mb-0">
-            <i class="bi bi-arrow-repeat me-2 text-primary"></i>Available Plans
-          </h5>
+<!-- Premium Membership System -->
+<div class="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+  <!-- Header Section -->
+  <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="text-center">
+        <h1 class="text-4xl font-bold mb-4">Premium Membership</h1>
+        <p class="text-xl opacity-90">Unlock exclusive benefits and save on every order</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="container mx-auto px-4">
+      <div class="flex space-x-8">
+        <button 
+          (click)="setActiveTab('plans')"
+          [class]="'py-4 px-2 border-b-2 font-medium text-sm transition-colors ' + 
+            (activeTab === 'plans' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700')">
+          Browse Plans
+        </button>
+        <button 
+          (click)="setActiveTab('current')"
+          [class]="'py-4 px-2 border-b-2 font-medium text-sm transition-colors ' + 
+            (activeTab === 'current' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700')">
+          My Membership
+        </button>
+        <button 
+          (click)="setActiveTab('loyalty')"
+          [class]="'py-4 px-2 border-b-2 font-medium text-sm transition-colors ' + 
+            (activeTab === 'loyalty' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700')">
+          Loyalty Points
+        </button>
+        <button 
+          (click)="setActiveTab('history')"
+          [class]="'py-4 px-2 border-b-2 font-medium text-sm transition-colors ' + 
+            (activeTab === 'history' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700')">
+          History
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="container mx-auto px-4 py-12">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+      <p class="mt-4 text-gray-600">Loading membership data...</p>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="container mx-auto px-4 py-4">
+    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
         </div>
+        <div class="ml-3">
+          <p class="text-sm text-red-800">{{ error }}</p>
+        </div>
+        <div class="ml-auto pl-3">
+          <button (click)="error = null" class="text-red-400 hover:text-red-600">
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="row g-3">
-          <div class="col-12" *ngFor="let plan of plans">
-            <div class="card h-100 card-hover border-primary" [class.border-2]="plan.popular">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
-                  <div>
-                    <h6 class="fw-bold">{{plan.name}}</h6>
-                    <p class="text-muted small mb-2">{{plan.meals}} meals • {{plan.days}} days</p>
-                  </div>
-                  <div class="text-end">
-                    <div class="h5 mb-0 text-primary fw-bold">₹{{plan.price}}</div>
-                    <div class="small text-muted">per month</div>
-                  </div>
-                </div>
+  <!-- Main Content -->
+  <div class="container mx-auto px-4 py-8" *ngIf="!loading">
+    
+    <!-- Plans Tab -->
+    <div *ngIf="activeTab === 'plans'">
+      <!-- Current Status Banner -->
+      <div *ngIf="currentMembership" class="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-green-900">You're a {{ currentMembership.plan.name }} member!</h3>
+              <p class="text-sm text-green-700">
+                Active until {{ formatDate(currentMembership.endDate) }} • 
+                Total savings: {{ formatCurrency(currentMembership.totalSavings) }}
+              </p>
+            </div>
+          </div>
+          <span [class]="getTierBadgeClass(currentMembership.plan.tier)">
+            {{ currentMembership.plan.tier }}
+          </span>
+        </div>
+      </div>
 
-                <div class="mt-3">
-                  <div class="d-flex align-items-center gap-2 small text-muted mb-2">
-                    <i class="bi bi-clock text-primary"></i>
-                    <span>{{plan.deliveryTime}}</span>
-                  </div>
-                  <div class="d-flex align-items-center gap-2 small text-muted mb-2">
-                    <i class="bi bi-calendar-check text-success"></i>
-                    <span>Starts: {{plan.startDate}}</span>
-                  </div>
-                  <div class="d-flex align-items-center gap-2 small text-muted">
-                    <i class="bi bi-box-seam text-info"></i>
-                    <span>{{plan.customizable ? 'Fully Customizable' : 'Fixed Menu'}}</span>
-                  </div>
-                </div>
+      <!-- Plan Comparison Toggle -->
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">Choose Your Plan</h2>
+        <button 
+          (click)="togglePlanComparison()"
+          class="text-purple-600 hover:text-purple-700 font-medium">
+          {{ showPlanComparison ? 'Hide' : 'Show' }} Comparison
+        </button>
+      </div>
 
-                <button class="btn btn-primary w-100 mt-3" (click)="subscribeToPlan(plan)">
-                  <i class="bi bi-check-circle me-2"></i>Subscribe Now
-                </button>
+      <!-- Billing Cycle Selector -->
+      <div class="bg-white rounded-lg shadow-sm border p-4 mb-6" *ngIf="!currentMembership">
+        <h3 class="text-lg font-medium mb-3">Billing Cycle</h3>
+        <div class="flex space-x-4">
+          <label class="flex items-center">
+            <input 
+              type="radio" 
+              [(ngModel)]="selectedBillingCycle" 
+              value="MONTHLY"
+              class="form-radio text-purple-600">
+            <span class="ml-2">Monthly</span>
+          </label>
+          <label class="flex items-center">
+            <input 
+              type="radio" 
+              [(ngModel)]="selectedBillingCycle" 
+              value="QUARTERLY"
+              class="form-radio text-purple-600">
+            <span class="ml-2">Quarterly <span class="text-green-600 text-sm">(Save 10%)</span></span>
+          </label>
+          <label class="flex items-center">
+            <input 
+              type="radio" 
+              [(ngModel)]="selectedBillingCycle" 
+              value="ANNUALLY"
+              class="form-radio text-purple-600">
+            <span class="ml-2">Annually <span class="text-green-600 text-sm">(Save 20%)</span></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Plans Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div 
+          *ngFor="let plan of plans" 
+          [class]="'bg-white rounded-lg shadow-lg border-2 transition-all duration-300 hover:shadow-xl ' + 
+            (plan.isPopular ? 'border-purple-500 ring-2 ring-purple-200' : 'border-gray-200') +
+            (selectedPlanId === plan.id ? ' ring-2 ring-purple-300' : '') +
+            (isCurrentPlan(plan.id) ? ' bg-green-50 border-green-300' : '')">
+          
+          <!-- Popular Badge -->
+          <div *ngIf="plan.isPopular" class="bg-purple-500 text-white text-center py-2 rounded-t-lg">
+            <span class="text-sm font-medium">🔥 Most Popular</span>
+          </div>
+          
+          <!-- Current Plan Badge -->
+          <div *ngIf="isCurrentPlan(plan.id)" class="bg-green-500 text-white text-center py-2 rounded-t-lg">
+            <span class="text-sm font-medium">✓ Current Plan</span>
+          </div>
+
+          <div class="p-6">
+            <!-- Plan Header -->
+            <div class="text-center mb-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{{ plan.name }}</h3>
+              <span [class]="getTierBadgeClass(plan.tier)" class="mb-4 inline-block">{{ plan.tier }}</span>
+              <div class="text-3xl font-bold text-gray-900 mb-2">
+                {{ formatCurrency(plan.price) }}
+                <span class="text-lg font-normal text-gray-600">/month</span>
               </div>
-              <span *ngIf="plan.popular" class="badge bg-warning position-absolute top-0 end-0 m-2">
-                <i class="bi bi-star-fill me-1"></i>Popular
-              </span>
+              <p class="text-gray-600">{{ plan.description }}</p>
+            </div>
+
+            <!-- Features List -->
+            <ul class="space-y-3 mb-6">
+              <li *ngFor="let feature of plan.features" class="flex items-start">
+                <svg class="h-5 w-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-gray-700">{{ feature }}</span>
+              </li>
+            </ul>
+
+            <!-- Benefits Summary -->
+            <div class="bg-gray-50 rounded-lg p-4 mb-6" *ngIf="showPlanComparison">
+              <h4 class="font-medium text-gray-900 mb-2">Key Benefits:</h4>
+              <div class="text-sm text-gray-600 space-y-1">
+                <div>Delivery Discount: {{ formatCurrency(plan.benefits.deliveryFeeDiscount) }}</div>
+                <div>Free Deliveries: {{ plan.benefits.freeDeliveries === -1 ? 'Unlimited' : plan.benefits.freeDeliveries }}</div>
+                <div>Loyalty Multiplier: {{ plan.benefits.loyaltyMultiplier }}x</div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="text-center">
+              <button 
+                *ngIf="!isCurrentPlan(plan.id)"
+                (click)="currentMembership ? upgradePlan(plan.id) : selectPlan(plan.id)"
+                [disabled]="loading || (currentMembership && !canUpgradeTo(plan.tier))"
+                [class]="'w-full py-3 px-4 rounded-lg font-medium transition-colors ' + 
+                  (selectedPlanId === plan.id ? 
+                    'bg-purple-600 text-white hover:bg-purple-700' : 
+                    'bg-gray-100 text-gray-700 hover:bg-gray-200') +
+                  (loading || (currentMembership && !canUpgradeTo(plan.tier)) ? ' opacity-50 cursor-not-allowed' : '')">
+                {{ currentMembership ? 
+                  (canUpgradeTo(plan.tier) ? 'Upgrade to ' + plan.name : 'Cannot Downgrade') : 
+                  (selectedPlanId === plan.id ? 'Selected' : 'Select Plan') }}
+              </button>
+              
+              <div *ngIf="isCurrentPlan(plan.id)" class="w-full py-3 px-4 bg-green-100 text-green-800 rounded-lg font-medium">
+                ✓ Your Current Plan
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="alert alert-info mt-3" *ngIf="plans.length === 0">
-          <i class="bi bi-info-circle me-2"></i>
-          No subscription plans available at the moment. Check back soon!
+      <!-- Subscription Form -->
+      <div *ngIf="selectedPlanId && !currentMembership" class="bg-white rounded-lg shadow-lg border p-6">
+        <h3 class="text-xl font-bold mb-4">Complete Your Subscription</h3>
+        
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Promo Code (Optional)</label>
+          <input 
+            type="text" 
+            [(ngModel)]="promoCode"
+            placeholder="Enter promo code"
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+
+        <div class="flex justify-between items-center">
+          <button 
+            (click)="selectedPlanId = null"
+            class="px-4 py-2 text-gray-600 hover:text-gray-800">
+            Cancel
+          </button>
+          <button 
+            (click)="subscribeToPlan()"
+            [disabled]="loading"
+            class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50">
+            {{ loading ? 'Processing...' : 'Subscribe Now' }}
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="card" *ngIf="activeSubscription">
-      <div class="card-body">
-        <h5 class="card-title">
-          <i class="bi bi-check-circle-fill text-success me-2"></i>Active Subscription
-        </h5>
-        <div class="mt-3">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-muted">Plan:</span>
-            <span class="fw-semibold">{{activeSubscription.planName}}</span>
+    <!-- Current Membership Tab -->
+    <div *ngIf="activeTab === 'current'">
+      <div *ngIf="currentMembership; else noMembership">
+        <!-- Membership Overview -->
+        <div class="bg-white rounded-lg shadow-lg border p-6 mb-6">
+          <div class="flex justify-between items-start mb-6">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ currentMembership.plan.name }}</h2>
+              <span [class]="getTierBadgeClass(currentMembership.plan.tier)">{{ currentMembership.plan.tier }}</span>
+            </div>
+            <div class="text-right">
+              <div class="text-2xl font-bold text-purple-600">{{ formatCurrency(currentMembership.plan.price) }}</div>
+              <div class="text-sm text-gray-600">per month</div>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-muted">Status:</span>
-            <span class="badge bg-success">{{activeSubscription.status}}</span>
+
+          <!-- Status and Dates -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-medium text-gray-900 mb-2">Status</h4>
+              <span [class]="'px-2 py-1 rounded-full text-xs font-medium ' + 
+                (currentMembership.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')">
+                {{ currentMembership.status }}
+              </span>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-medium text-gray-900 mb-2">Next Billing</h4>
+              <div class="text-sm text-gray-600">{{ formatDate(currentMembership.nextBillingDate) }}</div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="font-medium text-gray-900 mb-2">Valid Until</h4>
+              <div class="text-sm text-gray-600">{{ formatDate(currentMembership.endDate) }}</div>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="text-muted">Next Delivery:</span>
-            <span>{{activeSubscription.nextDelivery}}</span>
+
+          <!-- Usage Statistics -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-purple-600">{{ currentMembership.ordersPlaced }}</div>
+              <div class="text-sm text-gray-600">Orders Placed</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-green-600">{{ formatCurrency(currentMembership.totalSavings) }}</div>
+              <div class="text-sm text-gray-600">Total Savings</div>
+            </div>
+            <div class="text-center">
+              <div class="text-2xl font-bold text-blue-600">{{ currentMembership.deliveriesUsed }}</div>
+              <div class="text-sm text-gray-600">Free Deliveries Used</div>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="text-muted">Renews On:</span>
-            <span>{{activeSubscription.renewalDate}}</span>
+
+          <!-- Action Buttons -->
+          <div class="flex space-x-4">
+            <button 
+              (click)="setActiveTab('plans')"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+              Upgrade Plan
+            </button>
+            <button 
+              (click)="showCancelConfirmation = true"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+              Cancel Membership
+            </button>
           </div>
         </div>
 
-        <div class="d-flex gap-2 mt-3">
-          <button class="btn btn-outline-primary flex-fill">
-            <i class="bi bi-gear me-2"></i>Manage
-          </button>
-          <button class="btn btn-outline-danger flex-fill">
-            <i class="bi bi-pause-circle me-2"></i>Pause
+        <!-- Benefits Overview -->
+        <div class="bg-white rounded-lg shadow-lg border p-6">
+          <h3 class="text-lg font-bold mb-4">Your Benefits</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let feature of currentMembership.plan.features" class="flex items-center">
+              <svg class="h-5 w-5 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <span>{{ feature }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noMembership>
+        <div class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No Active Membership</h3>
+          <p class="text-gray-600 mb-6">Start saving with a premium membership plan</p>
+          <button 
+            (click)="setActiveTab('plans')"
+            class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+            Browse Plans
           </button>
         </div>
+      </ng-template>
+    </div>
+
+    <!-- Loyalty Points Tab -->
+    <div *ngIf="activeTab === 'loyalty'">
+      <div *ngIf="loyaltyPoints">
+        <!-- Points Overview -->
+        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg p-6 mb-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-2xl font-bold mb-2">Loyalty Points</h2>
+              <div class="text-3xl font-bold">{{ loyaltyPoints.availablePoints }}</div>
+              <div class="text-sm opacity-90">Available Points</div>
+            </div>
+            <div class="text-right">
+              <div [class]="'text-2xl font-bold ' + getLoyaltyTierColor(loyaltyPoints.tier)">{{ loyaltyPoints.tier }}</div>
+              <div class="text-sm opacity-90">Current Tier</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tier Progress -->
+        <div class="bg-white rounded-lg shadow-lg border p-6 mb-6">
+          <h3 class="text-lg font-bold mb-4">Tier Progress</h3>
+          <div class="mb-4">
+            <div class="flex justify-between text-sm text-gray-600 mb-2">
+              <span>Progress to next tier</span>
+              <span>{{ loyaltyPoints.pointsToNextTier }} points to go</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-300"
+                [style.width.%]="loyaltyPoints.tierProgress">
+              </div>
+            </div>
+          </div>
+          <div class="text-sm text-gray-600">
+            Total Points Earned: {{ loyaltyPoints.totalPoints }}
+          </div>
+        </div>
+
+        <!-- Points Expiry Warning -->
+        <div *ngIf="loyaltyPoints.expiringPoints > 0" class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <div class="flex">
+            <svg class="h-5 w-5 text-amber-400 mt-0.5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <div>
+              <p class="text-sm text-amber-800">
+                <strong>{{ loyaltyPoints.expiringPoints }} points</strong> will expire on 
+                <strong>{{ formatDate(loyaltyPoints.expirationDate) }}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Redemption Options -->
+        <div class="bg-white rounded-lg shadow-lg border p-6">
+          <h3 class="text-lg font-bold mb-4">Redeem Points</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="border rounded-lg p-4">
+              <h4 class="font-medium mb-2">Free Delivery (50 points)</h4>
+              <p class="text-sm text-gray-600 mb-3">Get free delivery on your next order</p>
+              <button 
+                (click)="redeemPoints(50, 'Free delivery redemption')"
+                [disabled]="loyaltyPoints.availablePoints < 50 || loading"
+                class="w-full py-2 px-4 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50">
+                Redeem
+              </button>
+            </div>
+            
+            <div class="border rounded-lg p-4">
+              <h4 class="font-medium mb-2">₹100 Off (200 points)</h4>
+              <p class="text-sm text-gray-600 mb-3">Get ₹100 discount on orders above ₹500</p>
+              <button 
+                (click)="redeemPoints(200, '₹100 discount voucher')"
+                [disabled]="loyaltyPoints.availablePoints < 200 || loading"
+                class="w-full py-2 px-4 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50">
+                Redeem
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loyaltyPoints" class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No Loyalty Points Yet</h3>
+        <p class="text-gray-600">Start ordering to earn loyalty points and unlock rewards</p>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div *ngIf="activeTab === 'history'">
+      <div class="bg-white rounded-lg shadow-lg border p-6">
+        <h2 class="text-2xl font-bold mb-6">Membership History</h2>
+        <div class="text-center py-12 text-gray-500">
+          <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <p>Membership history feature coming soon...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Confirmation Modal -->
+  <div *ngIf="showCancelConfirmation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+      <h3 class="text-lg font-bold mb-4">Cancel Membership?</h3>
+      <p class="text-gray-600 mb-6">
+        Are you sure you want to cancel your membership? You'll lose access to all premium benefits.
+      </p>
+      <div class="flex space-x-4">
+        <button 
+          (click)="showCancelConfirmation = false"
+          class="flex-1 py-2 px-4 border border-gray-300 rounded hover:bg-gray-50">
+          Keep Membership
+        </button>
+        <button 
+          (click)="cancelMembership()"
+          [disabled]="loading"
+          class="flex-1 py-2 px-4 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50">
+          {{ loading ? 'Cancelling...' : 'Cancel Membership' }}
+        </button>
       </div>
     </div>
   </div>

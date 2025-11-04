@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 
-export interface AppNotification {
+export interface LegacyNotification {
   id: string;
   title: string;
   message: string;
@@ -12,13 +12,13 @@ export interface AppNotification {
 const STORAGE_KEY = 'tk_notifications_v1';
 
 @Injectable({ providedIn: 'root' })
-export class NotificationService {
-  private _items = new BehaviorSubject<AppNotification[]>([]);
+export class LegacyNotificationService {
+  private _items = new BehaviorSubject<LegacyNotification[]>([]);
   items$ = this._items.asObservable();
 
   constructor(){ this.load(); }
 
-  list(): Observable<AppNotification[]> { return this.items$; }
+  list(): Observable<LegacyNotification[]> { return this.items$; }
 
   add(title: string, message: string){
     const arr = this._items.value.slice();

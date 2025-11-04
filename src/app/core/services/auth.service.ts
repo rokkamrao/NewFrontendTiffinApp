@@ -16,15 +16,30 @@ export interface UserProfile {
 	addresses?: Array<{ id: string; label?: string; line?: string; lat?: number; lng?: number }>;
 }
 
-export interface AuthResponse { 
-	success: boolean; 
+export interface AuthResponse {
+	success: boolean;
 	token?: string;
 	phone?: string;
 	name?: string;
 	message?: string;
 	role?: string;
+  isNewUser?: boolean;
 }
 
+export interface OtpRequest {
+  phone: string;
+}
+
+export interface VerifyOtpRequest {
+  phone: string;
+  otp: string;
+}
+
+export interface GoogleSignInRequest {
+  token: string;
+}
+
+// Legacy interfaces for backward compatibility
 export interface RegisterRequest {
 	phone: string;
 	password: string;
@@ -115,20 +130,122 @@ export class AuthService {
 		}
 	}
 
+	// New OTP-based authentication methods
+	sendOtp(request: OtpRequest): Observable<AuthResponse> {
+    console.log('[AuthService] sendOtp() called with:', request);
+    return this.api.post<AuthResponse>('/auth/send-otp', request).pipe(
+      map(response => {
+        console.log('[AuthService] sendOtp() - Backend response:', response);
+        return { ...response, success: true };
+      }),
+      catchError(error => {
+        console.error('[AuthService] sendOtp() - Error:', error);
+        return of({
+          success: false,
+          message: error.error?.message || error.message || 'Failed to send OTP'
+        });
+      })
+    );
+  }
+
+  verifyOtp(request: VerifyOtpRequest): Observable<AuthResponse> {
+    console.log('[AuthService] verifyOtp() called with:', request);
+    return this.api.post<{ token: string; phone: string; name: string; isNewUser: boolean }>('/auth/verify-otp', request).pipe(
+      map(response => {
+        console.log('[AuthService] verifyOtp() - Backend response:', response);
+        if (response.token) {
+          this.storeToken(response.token);
+          console.log('[AuthService] Token stored successfully');
+        }
+        this._user = {
+          phone: response.phone || request.phone,
+          name: response.name,
+          fullName: response.name,
+        };
+        this.persist();
+        console.log('[AuthService] User profile persisted:', this._user);
+        if (response.token && this._user) {
+          if (this.sessionService) {
+            try {
+              this.sessionService.createSession(response.token, this._user);
+              console.log('[AuthService] Session created for persistent login');
+            } catch (e) {
+              console.warn('[AuthService] Error creating session:', e);
+            }
+          }
+        }
+        return { ...response, success: true };
+      }),
+      catchError(error => {
+        console.error('[AuthService] verifyOtp() - Error:', error);
+        return of({
+          success: false,
+          message: error.error?.message || error.message || 'OTP verification failed'
+        });
+      })
+    );
+  }
+
+  googleSignIn(request: GoogleSignInRequest): Observable<AuthResponse> {
+    console.log('[AuthService] googleSignIn() called');
+    return this.api.post<{ token: string; phone: string; name: string; email: string; isNewUser: boolean }>('/auth/google-signin', request).pipe(
+      map(response => {
+        console.log('[AuthService] googleSignIn() - Backend response:', response);
+        if (response.token) {
+          this.storeToken(response.token);
+          console.log('[AuthService] Token stored successfully');
+        }
+        this._user = {
+          phone: response.phone,
+          name: response.name,
+          fullName: response.name,
+          email: response.email,
+        };
+        this.persist();
+        console.log('[AuthService] User profile persisted:', this._user);
+        if (response.token && this._user) {
+          if (this.sessionService) {
+            try {
+              this.sessionService.createSession(response.token, this._user);
+              console.log('[AuthService] Session created for persistent login');
+            } catch (e) {
+              console.warn('[AuthService] Error creating session:', e);
+            }
+          }
+        }
+        return { ...response, success: true };
+      }),
+      catchError(error => {
+        console.error('[AuthService] googleSignIn() - Error:', error);
+        return of({
+          success: false,
+          message: error.error?.message || error.message || 'Google Sign-In failed'
+        });
+      })
+    );
+  }
+
+  // Google Sign-In integration method
+  async signInWithGoogle(): Promise<string | null> {
+    // TODO: Implement Google Sign-In SDK integration
+    // For now, return a mock token for development
+    console.log('[AuthService] signInWithGoogle() - Mock implementation');
+    return Promise.resolve('mock_google_token_' + Date.now());
+  }
+
+	// Legacy methods - kept for backward compatibility
 	/**
-	 * Register a new user with the backend
+	 * @deprecated Use sendOtp() and verifyOtp() instead
 	 */
 	register(request: RegisterRequest): Observable<AuthResponse> {
 		console.log('[AuthService] register() called with:', { ...request, password: '***' });
 		return this.api.post<{ token: string; phone: string; name: string }>('/auth/register', request).pipe(
 			map(response => {
 				console.log('[AuthService] register() - Backend response:', response);
-				// Store JWT token
 				if (response.token) {
 					this.storeToken(response.token);
 					console.log('[AuthService] Token stored successfully');
 				}
-				// Create and persist user profile
 				this._user = {
 					phone: response.phone || request.phone,
 					name: response.name || request.name,
@@ -141,7 +258,6 @@ export class AuthService {
 				this.persist();
 				console.log('[AuthService] User profile persisted:', this._user);
 				
-				// Create session for persistent login
 				if (response.token && this._user) {
 					if (this.sessionService) {
 						try {
@@ -166,19 +282,17 @@ export class AuthService {
 	}
 
 	/**
-	 * Login with phone and password
+	 * @deprecated Use sendOtp() and verifyOtp() instead
 	 */
 	login(request: LoginRequest): Observable<AuthResponse> {
 		console.log('[AuthService] login() called with:', { ...request, password: '***' });
 		return this.api.post<{ token: string; phone: string; name: string }>('/auth/login', request).pipe(
 			map(response => {
 				console.log('[AuthService] login() - Backend response:', response);
-				// Store JWT token
 				if (response.token) {
 					this.storeToken(response.token);
 					console.log('[AuthService] Token stored successfully');
 				}
-				// Create and persist user profile
 				this._user = {
 					phone: response.phone || request.phone || request.email || '',
 					name: response.name,
@@ -188,7 +302,6 @@ export class AuthService {
 				this.persist();
 				console.log('[AuthService] User profile persisted:', this._user);
 				
-				// Create session for persistent login
 				if (response.token && this._user) {
 					if (this.sessionService) {
 						try {
@@ -212,18 +325,7 @@ export class AuthService {
 		);
 	}
 
-	// Legacy methods - deprecated but kept for backward compatibility
-	sendOtp(phone: string): Observable<AuthResponse> {
-		console.warn('sendOtp is deprecated. Use register() or login()');
-		return of({ success: true });
-	}
-
-	verifyOtp(phone: string, otp: string): Observable<AuthResponse> {
-		console.warn('verifyOtp is deprecated. Use register() or login()');
-		return of({ success: true });
-	}
-
-	// Forgot Password methods
+	// Forgot Password methods (kept for backward compatibility)
 	sendPasswordResetOtp(phone: string): Observable<AuthResponse> {
 		console.log('[AuthService] sendPasswordResetOtp() - Phone:', phone);
 		return this.api.post<AuthResponse>('/auth/forgot-password', { phone });
@@ -235,7 +337,7 @@ export class AuthService {
 	}
 
 	mockSignIn(phone: string){
-		console.warn('mockSignIn is deprecated. Use login()');
+		console.warn('mockSignIn is deprecated. Use verifyOtp()');
 		this._user = { phone };
 		this.persist();
 		return this._user;

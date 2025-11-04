@@ -336,18 +336,22 @@ export class DeliveryLoginComponent {
         this.isLoading = false;
         if (response.success) {
           // Check if user has delivery role from token
-          const token = localStorage.getItem('authToken');
-          if (token) {
-            const payload = this.decodeJwt(token);
-            const roles = payload?.roles || payload?.authorities || [];
-            const isDelivery = roles.includes('DELIVERY') || roles.includes('DELIVERY_PARTNER') || payload?.isDelivery === true;
-            
-            if (isDelivery) {
-              console.log('[DeliveryLogin] Delivery partner authenticated, redirecting to dashboard');
-              this.router.navigate(['/delivery/dashboard']);
+          if (typeof localStorage !== 'undefined') {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+              const payload = this.decodeJwt(token);
+              const roles = payload?.roles || payload?.authorities || [];
+              const isDelivery = roles.includes('DELIVERY') || roles.includes('DELIVERY_PARTNER') || payload?.isDelivery === true;
+              
+              if (isDelivery) {
+                console.log('[DeliveryLogin] Delivery partner authenticated, redirecting to dashboard');
+                this.router.navigate(['/delivery/dashboard']);
+              } else {
+                this.errorMessage = 'Access denied. Delivery partner privileges required.';
+                this.authService.logout();
+              }
             } else {
-              this.errorMessage = 'Access denied. Delivery partner privileges required.';
-              this.authService.logout();
+              this.errorMessage = 'Authentication failed. Please try again.';
             }
           } else {
             this.errorMessage = 'Authentication failed. Please try again.';

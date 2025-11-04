@@ -13,7 +13,7 @@ export class MenuService {
    */
   list(): Observable<Dish[]>{
     console.log('[MenuService] list() - Fetching all dishes');
-    return this.api.get<Dish[]>('/dishes').pipe(
+    return this.api.get<Dish[]>('/menu/dishes').pipe(
       tap({
         next: (dishes) => console.log('[MenuService] list() - Success:', dishes.length, 'dishes'),
         error: (error) => console.error('[MenuService] list() - Error:', error)
@@ -31,7 +31,7 @@ export class MenuService {
    */
   get(id: string): Observable<Dish>{
     console.log('[MenuService] get() - Fetching dish:', id);
-    return this.api.get<Dish>(`/dishes/${id}`).pipe(
+    return this.api.get<Dish>(`/menu/dishes/${id}`).pipe(
       tap({
         next: (dish) => console.log('[MenuService] get() - Success:', dish),
         error: (error) => console.error('[MenuService] get() - Error:', error)

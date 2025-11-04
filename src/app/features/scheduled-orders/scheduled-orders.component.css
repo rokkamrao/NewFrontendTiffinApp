@@ -1,0 +1,391 @@
+/* Scheduled Orders Component Styles */
+
+.scheduled-orders-container {
+  min-height: calc(100vh - 200px);
+}
+
+/* Order Cards */
+.order-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.order-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: scale(1.02);
+}
+
+/* Status Badge Animations */
+.status-badge {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Progress Bar Animation */
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
+
+/* Modal Animations */
+.modal-overlay {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.modal-content {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Form Field Animations */
+.form-field {
+  transition: all 0.2s ease-in-out;
+}
+
+.form-field:focus-within {
+  transform: scale(1.02);
+}
+
+/* Button Hover Effects */
+.btn-primary {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Attention Badge Pulse Animation */
+.attention-badge {
+  animation: pulse-attention 2s ease-in-out infinite;
+}
+
+@keyframes pulse-attention {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Day Selection Buttons */
+.day-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.day-button:hover {
+  transform: scale(1.05);
+}
+
+.day-button.selected {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Form Validation Error Animation */
+.error-message {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Tooltip Styles */
+.tooltip {
+  position: absolute;
+  z-index: 10;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: white;
+  background-color: #1f2937;
+  border-radius: 4px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.tooltip-trigger:hover .tooltip {
+  opacity: 1;
+}
+
+/* Success Rate Indicators */
+.success-rate-high {
+  color: #059669;
+}
+
+.success-rate-medium {
+  color: #d97706;
+}
+
+.success-rate-low {
+  color: #dc2626;
+}
+
+/* Calendar Integration Preview */
+.calendar-preview {
+  background: linear-gradient(135deg, #eef2ff 0%, #f3e8ff 100%);
+}
+
+/* Animation for new orders appearing */
+.order-enter {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation for removing orders */
+.order-leave {
+  animation: slideOutDown 0.3s ease-in;
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Custom scrollbar for modal content */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: color 0.2s ease-in-out;
+}
+
+/* Status-specific styles */
+.status-active {
+  color: #047857;
+  background-color: #d1fae5;
+  border-color: #a7f3d0;
+}
+
+.status-paused {
+  color: #92400e;
+  background-color: #fef3c7;
+  border-color: #fde68a;
+}
+
+.status-failed {
+  color: #b91c1c;
+  background-color: #fee2e2;
+  border-color: #fecaca;
+}
+
+.status-completed {
+  color: #1e40af;
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.status-cancelled {
+  color: #374151;
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.status-expired {
+  color: #4b5563;
+  background-color: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+/* Form field focus effects */
+.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #6366f1;
+  border-color: #6366f1;
+}
+
+.form-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #6366f1;
+  border-color: #6366f1;
+}
+
+.form-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #6366f1;
+  border-color: #6366f1;
+}
+
+/* Checkbox and radio button custom styles */
+.form-checkbox:checked {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.form-radio:checked {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+/* Loading state styles */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Error state styles */
+.error-container {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.error-icon {
+  color: #f87171;
+  flex-shrink: 0;
+}
+
+.error-content {
+  margin-left: 12px;
+  flex: 1;
+}
+
+.error-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #991b1b;
+}
+
+.error-message {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #b91c1c;
+}
+
+/* Success state styles */
+.success-container {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.success-icon {
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.success-content {
+  margin-left: 12px;
+  flex: 1;
+}
+
+.success-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #14532d;
+}
+
+.success-message {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #166534;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .order-card {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+  
+  .modal-content {
+    margin: 32px 16px;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-visible:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #6366f1;
+}
+
+/* Print styles */
+@media print {
+  .modal-overlay,
+  .btn-primary,
+  .btn-secondary {
+    display: none;
+  }
+  
+  .order-card {
+    break-inside: avoid;
+  }
+}

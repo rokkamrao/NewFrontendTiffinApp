@@ -16,7 +16,7 @@ import { RouterModule } from '@angular/router';
 export class MenuComponent implements OnInit {
   dishes: Dish[] = [];
   filteredDishList: Dish[] = [];
-  quantities: { [id:string]: number } = {};
+  quantities: { [id: string]: number } = {};
   searchTerm: string = '';
   selectedDiet: 'all' | 'veg' | 'non-veg' = 'all';
   selectedPriceRange: string = 'any';
@@ -29,13 +29,21 @@ export class MenuComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    console.log('[MenuComponent] ngOnInit');
     this.menu.list().subscribe(dishes => {
-      this.dishes = dishes;
-      this.filteredDishList = dishes;
+      console.log('[MenuComponent] Received dishes:', dishes);
+      // Transform dishes to add computed type property
+      this.dishes = dishes.map(dish => ({
+        ...dish,
+        type: dish.isVegetarian ? 'veg' as const : 'non-veg' as const,
+        tags: dish.tags || [] // Ensure tags is always an array
+      }));
+      this.filteredDishList = this.dishes;
       // Initialize quantities from cart
       this.cart.getItems().forEach((item: CartItem) => {
-        this.quantities[item.dish.id] = item.qty;
+        this.quantities[String(item.dish.id)] = item.qty;
       });
+      console.log('[MenuComponent] Processed dishes:', this.dishes);
     });
   }
 
@@ -51,15 +59,17 @@ export class MenuComponent implements OnInit {
   }
 
   addToCart(dish: Dish){
-    this.quantities[dish.id] = (this.quantities[dish.id] || 0) + 1;
+    const dishId = String(dish.id);
+    this.quantities[dishId] = (this.quantities[dishId] || 0) + 1;
     this.cart.add({ dish, qty:1 });
   }
 
   decreaseQty(dish: Dish){
-    if(!(this.quantities[dish.id] > 0)) return;
-    this.quantities[dish.id]--;
-    if(this.quantities[dish.id] === 0) this.cart.remove(dish.id);
-    else this.cart.updateQty(dish.id, this.quantities[dish.id]);
+    const dishId = String(dish.id);
+    if(!(this.quantities[dishId] > 0)) return;
+    this.quantities[dishId]--;
+    if(this.quantities[dishId] === 0) this.cart.remove(dishId);
+    else this.cart.updateQty(dishId, this.quantities[dishId]);
   }
 
   getTotalItems(): number {
@@ -68,7 +78,7 @@ export class MenuComponent implements OnInit {
 
   getTotalAmount(): number {
     return Object.entries(this.quantities).reduce((sum, [dishId, qty]) => {
-      const dish = this.dishes.find(d => d.id === dishId);
+      const dish = this.dishes.find(d => String(d.id) === dishId);
       return sum + (dish ? dish.price * qty : 0);
     }, 0);
   }
@@ -88,7 +98,7 @@ export class MenuComponent implements OnInit {
     this.filteredDishList = this.dishes.filter(d => {
       if (this.selectedDiet !== 'all' && d.type !== this.selectedDiet) return false;
       if (term && !(d.name.toLowerCase().includes(term) || (d.description||'').toLowerCase().includes(term))) return false;
-      if (this.selectedTags.length && !this.selectedTags.every(t => d.tags.map(x=>x.toLowerCase()).includes(t.toLowerCase()))) return false;
+      if (this.selectedTags.length && d.tags && !this.selectedTags.every(t => d.tags!.map(x=>x.toLowerCase()).includes(t.toLowerCase()))) return false;
       if (this.selectedPriceRange !== 'any'){
         const price = d.price;
         if (this.selectedPriceRange === 'under100' && !(price < 100)) return false;

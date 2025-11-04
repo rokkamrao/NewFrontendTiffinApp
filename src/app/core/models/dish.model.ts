@@ -1,15 +1,22 @@
 export type DietType = 'veg' | 'non-veg';
+export type SpiceLevel = 'MILD' | 'MEDIUM' | 'HOT';
+export type DishCategory = 'MAIN_COURSE' | 'BREAKFAST' | 'DESSERT' | 'APPETIZER' | 'BEVERAGE';
 
 export interface Dish {
-  id: string;
+  id: number | string;
   name: string;
   description?: string;
   price: number;
   imageUrl?: string;
-  tags: string[];
+  tags?: string[];  // Made optional since API doesn't provide this
   calories?: number;
-  type: DietType;  // Changed from isVegetarian to explicit type
-  rating?: number;
+  category: DishCategory;
+  isVegetarian: boolean;
+  isAvailable: boolean;
   preparationTime?: number;  // in minutes
-  spicyLevel?: 1 | 2 | 3;   // 1=mild, 2=medium, 3=hot
+  spiceLevel?: SpiceLevel;
+  rating?: number;
+  
+  // Computed property
+  type?: DietType;  // Will be computed from isVegetarian
 }

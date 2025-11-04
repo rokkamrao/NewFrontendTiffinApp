@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokenization & Redirection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .token-display { background: #f8f9fa; padding: 10px; border-radius: 3px; font-family: monospace; word-break: break-all; }
+    </style>
+</head>
+<body>
+    <h1>🔐 Tokenization & Redirection Test</h1>
+    <p>Test the authentication flow for different user types:</p>
+    
+    <div class="test-section">
+        <h3>👑 Admin User Test</h3>
+        <p>Phone: <strong>9876540000</strong> (ends with 0000 = Admin)</p>
+        <button onclick="testUserType('9876540000', 'Admin')">Test Admin Login</button>
+        <div id="admin-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🚚 Delivery Partner Test</h3>
+        <p>Phone: <strong>9876541111</strong> (ends with 1111 = Delivery Partner)</p>
+        <button onclick="testUserType('9876541111', 'Delivery Partner')">Test Delivery Login</button>
+        <div id="delivery-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>👤 Customer User Test</h3>
+        <p>Phone: <strong>9876543210</strong> (any other = Customer)</p>
+        <button onclick="testUserType('9876543210', 'Customer')">Test Customer Login</button>
+        <div id="customer-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🧪 Token Decoder</h3>
+        <textarea id="tokenInput" placeholder="Paste JWT token here..." rows="4" style="width: 100%;"></textarea>
+        <button onclick="decodeToken()">Decode Token</button>
+        <div id="decode-result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8081/api';
+        
+        async function testUserType(phone, userType) {
+            const resultDiv = document.getElementById(userType.toLowerCase().replace(' ', '') + '-result');
+            resultDiv.innerHTML = '<div class="info">Starting test for ' + userType + '...</div>';
+            
+            try {
+                // Step 1: Send OTP
+                console.log('Step 1: Sending OTP for', phone);
+                const otpResponse = await fetch(`${API_BASE}/auth/send-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone })
+                });
+                
+                const otpData = await otpResponse.json();
+                console.log('OTP Response:', otpData);
+                
+                if (!otpData.success) {
+                    throw new Error('Failed to send OTP: ' + otpData.message);
+                }
+                
+                resultDiv.innerHTML += '<div class="success">✓ OTP sent successfully</div>';
+                
+                // Step 2: Verify OTP
+                console.log('Step 2: Verifying OTP');
+                const verifyResponse = await fetch(`${API_BASE}/auth/verify-otp`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone: phone, otp: '123456' })
+                });
+                
+                const verifyData = await verifyResponse.json();
+                console.log('Verify Response:', verifyData);
+                
+                if (!verifyData.success) {
+                    throw new Error('Failed to verify OTP: ' + verifyData.message);
+                }
+                
+                resultDiv.innerHTML += '<div class="success">✓ OTP verified successfully</div>';
+                
+                // Step 3: Decode and analyze token
+                const token = verifyData.token;
+                const user = verifyData.user;
+                
+                resultDiv.innerHTML += `
+                    <div class="info">
+                        <strong>User Info:</strong><br>
+                        ID: ${user.id}<br>
+                        Name: ${user.name}<br>
+                        Role: ${user.role}<br>
+                        Email: ${user.email}
+                    </div>
+                `;
+                
+                // Decode JWT token
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    
+                    resultDiv.innerHTML += `
+                        <div class="success">
+                            <strong>✓ Token decoded successfully:</strong><br>
+                            <div class="token-display">${JSON.stringify(payload, null, 2)}</div>
+                        </div>
+                    `;
+                    
+                    // Test redirection logic
+                    const redirectUrl = getRedirectUrl(payload.role);
+                    resultDiv.innerHTML += `
+                        <div class="info">
+                            <strong>Redirect URL:</strong> ${redirectUrl}
+                        </div>
+                    `;
+                    
+                } catch (decodeError) {
+                    resultDiv.innerHTML += `<div class="error">✗ Token decode failed: ${decodeError.message}</div>`;
+                }
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                resultDiv.innerHTML += `<div class="error">✗ Test failed: ${error.message}</div>`;
+            }
+        }
+        
+        function getRedirectUrl(role) {
+            switch (role) {
+                case 'ADMIN':
+                    return '/admin/dashboard';
+                case 'DELIVERY_USER':
+                    return '/delivery/dashboard';
+                case 'CUSTOMER':
+                default:
+                    return '/account';
+            }
+        }
+        
+        function decodeToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const resultDiv = document.getElementById('decode-result');
+            
+            if (!token) {
+                resultDiv.innerHTML = '<div class="error">Please enter a token</div>';
+                return;
+            }
+            
+            try {
+                const parts = token.split('.');
+                if (parts.length !== 3) {
+                    throw new Error('Invalid JWT format - should have 3 parts separated by dots');
+                }
+                
+                const header = JSON.parse(atob(parts[0]));
+                const payload = JSON.parse(atob(parts[1]));
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <strong>✓ Token decoded successfully:</strong><br><br>
+                        <strong>Header:</strong>
+                        <div class="token-display">${JSON.stringify(header, null, 2)}</div>
+                        <strong>Payload:</strong>
+                        <div class="token-display">${JSON.stringify(payload, null, 2)}</div>
+                        <strong>Redirect URL:</strong> ${getRedirectUrl(payload.role)}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">✗ Decode failed: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -4,6 +4,17 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 
+interface OtpStepState {
+  step: 'phone' | 'otp';
+  phone: string;
+  otp: string;
+  isLoading: boolean;
+  errorMessage: string;
+  otpSent: boolean;
+  resendCooldown: number;
+  canResend: boolean;
+}
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -12,13 +23,20 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  emailOrPhone: string = '';
-  password: string = '';
-  errorMessage: string = '';
-  isLoading: boolean = false;
-  showPassword: boolean = false;
+  state: OtpStepState = {
+    step: 'phone',
+    phone: '',
+    otp: '',
+    isLoading: false,
+    errorMessage: '',
+    otpSent: false,
+    resendCooldown: 0,
+    canResend: false
+  };
+
   returnUrl: string = '/home'; // Public for template access
   private platformId = inject(PLATFORM_ID);
+  private resendTimer: any;
 
   constructor(
     private router: Router,
@@ -27,101 +45,248 @@ export class LoginComponent {
   ) {
     // Get return URL from query params
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+    console.log('[Login] Constructor - Return URL from query params:', this.route.snapshot.queryParams['returnUrl']);
+    console.log('[Login] Constructor - Final return URL:', this.returnUrl);
+    console.log('[Login] Constructor - Full query params:', this.route.snapshot.queryParams);
   }
 
-  validateInput(): boolean {
-    // Check if it's an email or phone number
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  ngOnDestroy() {
+    if (this.resendTimer) {
+      clearInterval(this.resendTimer);
+    }
+  }
+
+  validatePhone(): boolean {
     const phoneRegex = /^[6-9]\d{9}$/;
     
-    if (!this.emailOrPhone) {
-      this.errorMessage = 'Please enter your email or phone number';
+    if (!this.state.phone) {
+      this.state.errorMessage = 'Please enter your phone number';
       return false;
     }
     
-    if (!emailRegex.test(this.emailOrPhone) && !phoneRegex.test(this.emailOrPhone)) {
-      this.errorMessage = 'Please enter a valid email or 10-digit phone number';
-      return false;
-    }
-
-    if (!this.password) {
-      this.errorMessage = 'Please enter your password';
-      return false;
-    }
-
-    if (this.password.length < 6) {
-      this.errorMessage = 'Password must be at least 6 characters';
+    if (!phoneRegex.test(this.state.phone)) {
+      this.state.errorMessage = 'Please enter a valid 10-digit phone number starting with 6-9';
       return false;
     }
     
-    this.errorMessage = '';
+    this.state.errorMessage = '';
     return true;
   }
 
-  async login() {
-    if (!this.validateInput()) {
+  validateOtp(): boolean {
+    if (!this.state.otp) {
+      this.state.errorMessage = 'Please enter the OTP';
+      return false;
+    }
+
+    if (this.state.otp.length !== 6) {
+      this.state.errorMessage = 'OTP must be 6 digits';
+      return false;
+    }
+
+    if (!/^\d{6}$/.test(this.state.otp)) {
+      this.state.errorMessage = 'OTP must contain only numbers';
+      return false;
+    }
+    
+    this.state.errorMessage = '';
+    return true;
+  }
+
+  async sendOtp() {
+    if (!this.validatePhone()) {
       return;
     }
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.state.isLoading = true;
+    this.state.errorMessage = '';
 
-    // Determine if input is phone or email
-    const phoneRegex = /^[6-9]\d{9}$/;
-    const isPhone = phoneRegex.test(this.emailOrPhone);
-    
-    const loginRequest = {
-      phone: isPhone ? this.emailOrPhone : '',
-      email: !isPhone ? this.emailOrPhone : '',
-      password: this.password
-    };
+    console.log('[Login] Attempting to send OTP to phone:', this.state.phone);
+    console.log('[Login] Current return URL:', this.returnUrl);
 
-    this.authService.login(loginRequest as any).subscribe({
+    this.authService.sendOtp({ phone: this.state.phone }).subscribe({
       next: (response) => {
-        this.isLoading = false;
+        this.state.isLoading = false;
+        console.log('[Login] Send OTP response received:', response);
         if (response.success) {
-          console.log('[Login] Login successful, redirecting to:', this.returnUrl);
-          this.router.navigate([this.returnUrl]);
+          this.state.step = 'otp';
+          this.state.otpSent = true;
+          this.startResendCooldown();
+          console.log('[Login] OTP sent successfully, moved to OTP step');
         } else {
-          this.errorMessage = response.message || 'Invalid credentials. Please try again.';
+          console.error('[Login] Send OTP failed:', response.message);
+          this.state.errorMessage = response.message || 'Failed to send OTP. Please try again.';
         }
       },
       error: (error) => {
-        this.isLoading = false;
-        console.error('[Login] Login error:', error);
+        this.state.isLoading = false;
+        console.error('[Login] Send OTP error:', error);
+        console.error('[Login] Error details - Status:', error.status, 'Message:', error.message);
+        console.error('[Login] Error body:', error.error);
         
-        // Handle different types of errors
         if (error.status === 0) {
-          this.errorMessage = 'Cannot connect to server. Please check if the backend is running.';
-        } else if (error.status === 401) {
-          this.errorMessage = 'Invalid email/phone or password. Please try again.';
-        } else if (error.status === 404) {
-          this.errorMessage = 'Login service not found. Please contact support.';
+          this.state.errorMessage = 'Cannot connect to server. Please check if the backend is running on port 8080.';
+        } else if (error.status === 429) {
+          this.state.errorMessage = 'Too many requests. Please wait before trying again.';
         } else if (error.status === 500) {
-          this.errorMessage = error.error?.message || 'Server error occurred. Please try again later or contact support.';
+          this.state.errorMessage = error.error?.message || 'Server error occurred. Please try again later.';
         } else if (error.error?.message) {
-          this.errorMessage = error.error.message;
+          this.state.errorMessage = error.error.message;
         } else {
-          this.errorMessage = `Login failed (Error ${error.status}). Please try again or contact support.`;
+          this.state.errorMessage = `Failed to send OTP (Error ${error.status}). Please try again.`;
         }
       }
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
+  async verifyOtp() {
+    if (!this.validateOtp()) {
+      return;
+    }
+
+    this.state.isLoading = true;
+    this.state.errorMessage = '';
+
+    console.log('[Login] Attempting to verify OTP:', this.state.otp, 'for phone:', this.state.phone);
+    console.log('[Login] Current return URL:', this.returnUrl);
+
+    this.authService.verifyOtp({ phone: this.state.phone, otp: this.state.otp }).subscribe({
+      next: (response) => {
+        this.state.isLoading = false;
+        console.log('[Login] Verify OTP response received:', response);
+        if (response.success) {
+          console.log('[Login] OTP verified successfully, redirecting to:', this.returnUrl);
+          
+          // Handle new user flow if needed
+          if (response.isNewUser) {
+            console.log('[Login] New user detected, might need profile setup');
+          }
+          
+          // Navigate to return URL
+          console.log('[Login] Navigating to:', this.returnUrl);
+          this.router.navigate([this.returnUrl]);
+        } else {
+          console.error('[Login] Verify OTP failed:', response.message);
+          this.state.errorMessage = response.message || 'Invalid OTP. Please try again.';
+        }
+      },
+      error: (error) => {
+        this.state.isLoading = false;
+        console.error('[Login] Verify OTP error:', error);
+        console.error('[Login] Error details - Status:', error.status, 'Message:', error.message);
+        console.error('[Login] Error body:', error.error);
+        
+        if (error.status === 0) {
+          this.state.errorMessage = 'Cannot connect to server. Please check if the backend is running on port 8080.';
+        } else if (error.status === 401) {
+          this.state.errorMessage = 'Invalid or expired OTP. Please try again.';
+        } else if (error.status === 429) {
+          this.state.errorMessage = 'Too many attempts. Please wait before trying again.';
+        } else if (error.status === 500) {
+          this.state.errorMessage = error.error?.message || 'Server error occurred. Please try again later.';
+        } else if (error.error?.message) {
+          this.state.errorMessage = error.error.message;
+        } else {
+          this.state.errorMessage = `OTP verification failed (Error ${error.status}). Please try again.`;
+        }
+      }
+    });
   }
 
-  loginWithGoogle() {
-    // Implement Google OAuth login
-    console.log('Google login clicked');
-    alert('Google Sign-in will be integrated with Firebase/OAuth');
+  async resendOtp() {
+    if (!this.state.canResend) {
+      return;
+    }
+
+    this.state.isLoading = true;
+    this.state.errorMessage = '';
+
+    this.authService.sendOtp({ phone: this.state.phone }).subscribe({
+      next: (response) => {
+        this.state.isLoading = false;
+        if (response.success) {
+          this.state.otp = ''; // Clear previous OTP
+          this.startResendCooldown();
+          console.log('[Login] OTP resent successfully');
+        } else {
+          this.state.errorMessage = response.message || 'Failed to resend OTP. Please try again.';
+        }
+      },
+      error: (error) => {
+        this.state.isLoading = false;
+        console.error('[Login] Resend OTP error:', error);
+        this.state.errorMessage = error.error?.message || 'Failed to resend OTP. Please try again.';
+      }
+    });
+  }
+
+  startResendCooldown() {
+    this.state.resendCooldown = 30; // 30 seconds cooldown
+    this.state.canResend = false;
+    
+    this.resendTimer = setInterval(() => {
+      this.state.resendCooldown--;
+      if (this.state.resendCooldown <= 0) {
+        this.state.canResend = true;
+        clearInterval(this.resendTimer);
+      }
+    }, 1000);
+  }
+
+  async loginWithGoogle() {
+    try {
+      // This would integrate with Google Sign-In SDK
+      const credential = await this.authService.signInWithGoogle();
+      
+      if (credential) {
+        this.state.isLoading = true;
+        this.state.errorMessage = '';
+
+        this.authService.googleSignIn({ token: credential }).subscribe({
+          next: (response) => {
+            this.state.isLoading = false;
+            if (response.success) {
+              console.log('[Login] Google Sign-In successful, redirecting to:', this.returnUrl);
+              
+              // Handle new user flow if needed
+              if (response.isNewUser) {
+                console.log('[Login] New Google user detected');
+              }
+              
+              this.router.navigate([this.returnUrl]);
+            } else {
+              this.state.errorMessage = response.message || 'Google Sign-In failed. Please try again.';
+            }
+          },
+          error: (error) => {
+            this.state.isLoading = false;
+            console.error('[Login] Google Sign-In error:', error);
+            this.state.errorMessage = error.error?.message || 'Google Sign-In failed. Please try again.';
+          }
+        });
+      }
+    } catch (error) {
+      console.error('[Login] Google Sign-In SDK error:', error);
+      this.state.errorMessage = 'Google Sign-In is not available. Please use phone login.';
+    }
   }
 
   onInputChange() {
     // Clear error when user types
-    if (this.errorMessage) {
-      this.errorMessage = '';
+    if (this.state.errorMessage) {
+      this.state.errorMessage = '';
+    }
+  }
+
+  editPhoneNumber() {
+    this.state.step = 'phone';
+    this.state.otp = '';
+    this.state.otpSent = false;
+    this.state.errorMessage = '';
+    this.state.canResend = false;
+    this.state.resendCooldown = 0;
+    if (this.resendTimer) {
+      clearInterval(this.resendTimer);
     }
   }
 

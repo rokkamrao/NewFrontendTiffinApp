@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotificationService, AppNotification } from '../../core/services/notification.service';
+import { LegacyNotificationService, LegacyNotification } from '../../core/services/legacy-notification.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,5 +16,5 @@ export class NotificationsComponent{
     { type: 'promo', title: 'Special Offer', message: 'Get 20% off on your next subscription', time: '3 hours ago', read: true },
     { type: 'reminder', title: 'Meal Reminder', message: 'Your lunch will be delivered at 12 PM', time: 'Yesterday', read: true }
   ];
-  constructor(private ns: NotificationService){}
+  constructor(private ns: LegacyNotificationService){}
 }

@@ -16,20 +16,8 @@ export class ApiService {
   private readonly baseUrl: string;
 
   constructor() {
-    // Determine base URL in a way that's SSR-safe and dev-friendly
-    let resolved = '/api';
-    try {
-      // Guard against SSR where window is undefined
-      const w: any = (globalThis as any)?.window;
-      const loc = w?.location?.host as string | undefined;
-      // If running the Angular dev server on 4200, bypass proxy flakiness and hit backend directly
-      if (loc && (loc.includes('localhost:4200') || loc.includes('127.0.0.1:4200'))) {
-        resolved = 'http://localhost:8081/api';
-      }
-    } catch {
-      // Keep default '/api' on SSR or if any error occurs
-    }
-    this.baseUrl = resolved;
+    // Use proxy configuration to route all API calls to port 8080
+    this.baseUrl = '/api';
     console.log(`[ApiService] Initialized with baseUrl=${this.baseUrl}`);
   }
 

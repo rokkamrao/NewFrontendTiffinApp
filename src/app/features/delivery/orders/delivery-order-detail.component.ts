@@ -92,10 +92,13 @@ export class DeliveryOrderDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    const isLoggedIn = localStorage.getItem('deliveryLoggedIn');
-    if (isLoggedIn !== 'true') {
-      this.router.navigate(['/delivery/login']);
-      return;
+    // Check if we're in a browser environment
+    if (typeof localStorage !== 'undefined') {
+      const isLoggedIn = localStorage.getItem('deliveryLoggedIn');
+      if (isLoggedIn !== 'true') {
+        this.router.navigate(['/delivery/login']);
+        return;
+      }
     }
 
     this.orderId = this.route.snapshot.params['id'];
@@ -103,12 +106,14 @@ export class DeliveryOrderDetailComponent implements OnInit {
   }
 
   loadLocationHistory() {
-    const savedLocations = localStorage.getItem('deliveryLocations');
-    if (savedLocations) {
-      const allLocations = JSON.parse(savedLocations);
-      this.locationHistory = allLocations
-        .filter((loc: any) => loc.orderId === this.orderId)
-        .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    if (typeof localStorage !== 'undefined') {
+      const savedLocations = localStorage.getItem('deliveryLocations');
+      if (savedLocations) {
+        const allLocations = JSON.parse(savedLocations);
+        this.locationHistory = allLocations
+          .filter((loc: any) => loc.orderId === this.orderId)
+          .sort((a: any, b: any) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      }
     }
   }
 
@@ -123,7 +128,8 @@ export class DeliveryOrderDetailComponent implements OnInit {
   }
 
   captureCurrentLocation() {
-    if (navigator.geolocation) {
+    // Check if we're in a browser environment
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const locationData = {
@@ -138,13 +144,15 @@ export class DeliveryOrderDetailComponent implements OnInit {
           console.log('Location captured:', locationData);
           
           // Save to localStorage
-          const savedLocations = localStorage.getItem('deliveryLocations');
-          const locations = savedLocations ? JSON.parse(savedLocations) : [];
-          locations.push(locationData);
-          localStorage.setItem('deliveryLocations', JSON.stringify(locations));
-          
-          // Reload history
-          this.loadLocationHistory();
+          if (typeof localStorage !== 'undefined') {
+            const savedLocations = localStorage.getItem('deliveryLocations');
+            const locations = savedLocations ? JSON.parse(savedLocations) : [];
+            locations.push(locationData);
+            localStorage.setItem('deliveryLocations', JSON.stringify(locations));
+            
+            // Reload history
+            this.loadLocationHistory();
+          }
           
           alert('Location captured successfully!');
         },
@@ -165,6 +173,8 @@ export class DeliveryOrderDetailComponent implements OnInit {
 
   viewOnMap(lat: number, lng: number) {
     const url = `https://www.google.com/maps?q=${lat},${lng}`;
-    window.open(url, '_blank');
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank');
+    }
   }
 }

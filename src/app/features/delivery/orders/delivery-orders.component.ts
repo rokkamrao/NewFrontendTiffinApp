@@ -239,9 +239,12 @@ export class DeliveryOrdersComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    const isLoggedIn = localStorage.getItem('deliveryLoggedIn');
-    if (isLoggedIn !== 'true') {
-      this.router.navigate(['/delivery/login']);
+    // Check if we're in a browser environment
+    if (typeof localStorage !== 'undefined') {
+      const isLoggedIn = localStorage.getItem('deliveryLoggedIn');
+      if (isLoggedIn !== 'true') {
+        this.router.navigate(['/delivery/login']);
+      }
     }
   }
 
@@ -321,7 +324,8 @@ export class DeliveryOrdersComponent implements OnInit {
   }
 
   captureLocation(action: string, orderId: string) {
-    if (navigator.geolocation) {
+    // Check if we're in a browser environment
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const locationData = {
@@ -336,10 +340,12 @@ export class DeliveryOrdersComponent implements OnInit {
           console.log('Location captured:', locationData);
           
           // Save to localStorage for demo
-          const savedLocations = localStorage.getItem('deliveryLocations');
-          const locations = savedLocations ? JSON.parse(savedLocations) : [];
-          locations.push(locationData);
-          localStorage.setItem('deliveryLocations', JSON.stringify(locations));
+          if (typeof localStorage !== 'undefined') {
+            const savedLocations = localStorage.getItem('deliveryLocations');
+            const locations = savedLocations ? JSON.parse(savedLocations) : [];
+            locations.push(locationData);
+            localStorage.setItem('deliveryLocations', JSON.stringify(locations));
+          }
           
           // In production, send to backend:
           // this.http.post('/api/delivery/location', locationData).subscribe();
@@ -363,6 +369,8 @@ export class DeliveryOrdersComponent implements OnInit {
 
   openMaps(order: DeliveryOrder) {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${order.address.lat},${order.address.lng}`;
-    window.open(url, '_blank');
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank');
+    }
   }
 }
