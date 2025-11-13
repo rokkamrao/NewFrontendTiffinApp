@@ -38,8 +38,8 @@ export class SplashComponent implements OnInit {
         console.log('[Splash] Auto navigating');
         
         if (hasSeenOnboarding) {
-          // Skip to home if already onboarded
-          this.router.navigate(['/home']);
+          // Skip to dashboard if already onboarded
+          this.router.navigate(['/dashboard']);
         } else {
           // First time - go to onboarding
           this.router.navigate(['/onboarding']);

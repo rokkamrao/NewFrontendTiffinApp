@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService, UserProfile } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
+import { UserProfile } from '../../core/models/index';
 import { Router } from '@angular/router';
 
 @Component({
@@ -44,6 +45,6 @@ export class ProfileSetupComponent{
 
   save(){
     this.auth.updateUser({ name: this.model.name, dietary: this.model.dietary });
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
   }
 }

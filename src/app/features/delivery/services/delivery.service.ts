@@ -26,7 +26,7 @@ interface ApiResponse<T> {
 })
 export class DeliveryService {
   private readonly baseUrl = 'http://localhost:8080/api/delivery';
-  private readonly useMockData = true; // Enable mock data for testing
+  private readonly useMockData = false; // Use real API data only
   
   private currentPartnerSubject = new BehaviorSubject<DeliveryPartner | null>(null);
   public currentPartner$ = this.currentPartnerSubject.asObservable();

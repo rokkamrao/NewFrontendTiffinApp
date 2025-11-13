@@ -148,7 +148,7 @@ export class ProfileSetupComponent implements OnInit {
       localStorage.setItem('userProfile', JSON.stringify(userProfile));
       localStorage.setItem('isLoggedIn', 'true');
       this.isLoading = false;
-      this.router.navigate(['/home']);
+      this.router.navigate(['/dashboard']);
     }, 1500);
   }
 

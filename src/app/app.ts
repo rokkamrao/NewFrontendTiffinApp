@@ -1,9 +1,11 @@
 import { Component, signal, PLATFORM_ID, inject, OnInit, OnDestroy } from '@angular/core';
 import { RouterOutlet, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { filter } from 'rxjs/operators';
+import { filter, Subscription } from 'rxjs';
 import { ImageService } from './core/services/image.service';
 import { FaviconService } from './core/services/favicon.service';
+import { AuthService } from './core/services/auth.service';
+import { UserProfile } from './core/models/index';
 
 @Component({
   selector: 'app-root',
@@ -11,21 +13,28 @@ import { FaviconService } from './core/services/favicon.service';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy {
   protected readonly title = signal('tiffin-app');
   hideShell = false;
   private platformId = inject(PLATFORM_ID);
   logoUrl = '';
 
+  // 🎯 CENTRALIZED AUTH STATE
+  public currentUser: UserProfile | null = null;
+  public isLoggedIn = false;
+  private authSubscription?: Subscription;
+
   constructor(
-    private router: Router,
+    public router: Router,
     public imageService: ImageService,
-    private faviconService: FaviconService
+    private faviconService: FaviconService,
+    private authService: AuthService
   ) {
-    console.log('[App] Constructed');
+    console.log('[App] 🚀 Constructed with centralized auth');
     
     // Initialize logo URL
     this.logoUrl = this.imageService.getLogo();
+    console.log('[App] Logo URL initialized:', this.logoUrl);
     
     // Only run navigation logic in browser (not during SSR) and only on initial load
     if (isPlatformBrowser(this.platformId)) {
@@ -50,56 +59,94 @@ export class App implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('[App] ngOnInit called');
     
+    // 🎯 SUBSCRIBE TO AUTH STATE CHANGES
+    this.authSubscription = this.authService.user$.subscribe(user => {
+      console.log('[App] 🔄 Auth state updated:', user ? `Logged in as ${user.name}` : 'Not logged in');
+      this.currentUser = user;
+      this.isLoggedIn = !!user;
+    });
+    
     // Initialize favicon in browser only
     if (isPlatformBrowser(this.platformId)) {
       console.log('[App] Platform is browser, initializing favicon');
       this.faviconService.initFavicon();
-      
-      // Images will only load on page refresh, not automatically
-      // No subscription to image updates needed
     } else {
       console.log('[App] Platform is server, skipping favicon');
     }
   }
 
   ngOnDestroy() {
-    // No subscriptions to clean up
+    // 🎯 CLEANUP AUTH SUBSCRIPTION
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
-  // Explicit navigation helpers so clicks are definitely handled
+  // 🎯 NAVIGATION HELPERS
   goToAccount(event?: Event) {
     if (event) event.preventDefault();
-    const loggedIn = isPlatformBrowser(this.platformId) && localStorage.getItem('isLoggedIn') === 'true';
-    this.router.navigate([ loggedIn ? '/account' : '/auth/signup' ]);
+    this.router.navigate([ this.isLoggedIn ? '/account' : '/auth/login' ]);
   }
+  
   goToHome(event?: Event) {
     if (event) event.preventDefault();
     this.router.navigate(['/home']);
   }
+  
   goToMenu(event?: Event) {
     if (event) event.preventDefault();
     this.router.navigate(['/menu']);
   }
+  
   goToOrders(event?: Event) {
     if (event) event.preventDefault();
     this.router.navigate(['/orders']);
   }
 
+  goToLogin(event?: Event) {
+    if (event) event.preventDefault();
+    this.router.navigate(['/auth/login']);
+  }
+
+  goToAuth(event?: Event) {
+    if (event) event.preventDefault();
+    this.router.navigate(['/auth/signup']);
+  }
+
+  // 🎯 CENTRALIZED LOGOUT
+  logout() {
+    console.log('[App] 🚪 Logout triggered');
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
+  // 🎯 USER DISPLAY HELPERS
+  getUserDisplayName(): string {
+    if (!this.currentUser) return 'Guest';
+    return this.currentUser.fullName || this.currentUser.name || 'User';
+  }
+
   onLogoLoad(event: Event) {
+    console.log('[App] Logo loaded successfully');
     const imgElement = event.target as HTMLImageElement;
     const defaultLogo = document.getElementById('default-logo');
     if (imgElement && defaultLogo) {
-      imgElement.style.display = 'block';
-      defaultLogo.style.display = 'none';
+      console.log('[App] Showing custom logo, hiding default T');
+      // Smooth transition: fade in custom logo, fade out default
+      imgElement.style.opacity = '1';
+      defaultLogo.style.opacity = '0';
     }
   }
 
   onLogoError(event: Event) {
+    console.log('[App] Logo failed to load, showing default T');
     const imgElement = event.target as HTMLImageElement;
     const defaultLogo = document.getElementById('default-logo');
     if (imgElement && defaultLogo) {
-      imgElement.style.display = 'none';
-      defaultLogo.style.display = 'flex';
+      console.log('[App] Hiding custom logo, showing default T');
+      // Smooth transition: fade out custom logo, fade in default
+      imgElement.style.opacity = '0';
+      defaultLogo.style.opacity = '1';
     }
   }
 }

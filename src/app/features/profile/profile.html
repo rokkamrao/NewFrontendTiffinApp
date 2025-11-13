@@ -1,0 +1,235 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm border p-6 mb-6">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
+      <p class="text-gray-600">Manage your account information and preferences</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="bg-white rounded-lg shadow-sm border p-8 text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <p class="text-gray-600">Loading your profile...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="errorMessage && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <i class="bi bi-exclamation-triangle-fill text-red-600 mr-3"></i>
+        <span class="text-red-800">{{ errorMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+      <div class="flex items-center">
+        <i class="bi bi-check-circle-fill text-green-600 mr-3"></i>
+        <span class="text-green-800">{{ successMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div *ngIf="userProfile && !isLoading" class="space-y-6">
+      
+      <!-- Profile Picture Section -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Profile Picture</h2>
+        
+        <div class="flex items-center space-x-6">
+          <!-- Current Profile Image -->
+          <div class="flex-shrink-0">
+            <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
+              <img 
+                *ngIf="profileImagePreview" 
+                [src]="profileImagePreview" 
+                [alt]="getDisplayName()"
+                class="w-full h-full object-cover">
+              <div 
+                *ngIf="!profileImagePreview"
+                class="w-full h-full flex items-center justify-center bg-blue-500 text-white text-xl font-bold">
+                {{ getInitials() }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload Controls -->
+          <div *ngIf="isEditing" class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Choose new profile picture
+            </label>
+            <input 
+              type="file" 
+              accept="image/*"
+              (change)="onProfileImageSelected($event)"
+              class="block w-full text-sm text-gray-500
+                     file:mr-4 file:py-2 file:px-4
+                     file:rounded-lg file:border-0
+                     file:text-sm file:font-medium
+                     file:bg-blue-50 file:text-blue-700
+                     hover:file:bg-blue-100">
+            <p class="text-xs text-gray-500 mt-1">PNG, JPG or GIF up to 5MB</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personal Information Section -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">Personal Information</h2>
+          <div class="space-x-3">
+            <button 
+              *ngIf="!isEditing"
+              (click)="startEditing()"
+              class="inline-flex items-center px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+              <i class="bi bi-pencil mr-2"></i>
+              Edit Profile
+            </button>
+            
+            <div *ngIf="isEditing" class="space-x-3">
+              <button 
+                (click)="cancelEditing()"
+                [disabled]="isSaving"
+                class="inline-flex items-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50">
+                <i class="bi bi-x-lg mr-2"></i>
+                Cancel
+              </button>
+              <button 
+                (click)="saveProfile()"
+                [disabled]="isSaving"
+                class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50">
+                <i 
+                  [class]="isSaving ? 'bi bi-arrow-repeat animate-spin mr-2' : 'bi bi-check-lg mr-2'">
+                </i>
+                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- First Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              First Name <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="text"
+              [(ngModel)]="userProfile.firstName"
+              [readonly]="!isEditing"
+              [class]="isEditing ? 'block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500' : 'block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700'"
+              placeholder="Enter your first name">
+          </div>
+
+          <!-- Last Name -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Last Name
+            </label>
+            <input 
+              type="text"
+              [(ngModel)]="userProfile.lastName"
+              [readonly]="!isEditing"
+              [class]="isEditing ? 'block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500' : 'block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700'"
+              placeholder="Enter your last name">
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Email Address <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="email"
+              [(ngModel)]="userProfile.email"
+              [readonly]="!isEditing"
+              [class]="isEditing ? 'block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500' : 'block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700'"
+              placeholder="Enter your email">
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Phone Number
+            </label>
+            <input 
+              type="tel"
+              [(ngModel)]="userProfile.phoneNumber"
+              [readonly]="!isEditing"
+              [class]="isEditing ? 'block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500' : 'block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700'"
+              placeholder="Enter your phone number">
+          </div>
+
+          <!-- Preferred Language -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Preferred Language
+            </label>
+            <select 
+              [(ngModel)]="userProfile.preferredLanguage"
+              [disabled]="!isEditing"
+              [class]="isEditing ? 'block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500' : 'block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-700'">
+              <option value="en">English</option>
+              <option value="hi">हिंदी (Hindi)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Account Information Section -->
+      <div class="bg-white rounded-lg shadow-sm border p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Account Information</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">User ID</label>
+            <input 
+              type="text"
+              [value]="userProfile.id"
+              readonly
+              class="block w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 cursor-not-allowed">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Account Status</label>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+              <i class="bi bi-check-circle-fill mr-2"></i>
+              Active
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="bg-white rounded-lg shadow-sm border border-red-200 p-6">
+        <h2 class="text-xl font-semibold text-red-900 mb-4">Account Actions</h2>
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg">
+            <div>
+              <h3 class="font-medium text-gray-900">Reset Password</h3>
+              <p class="text-sm text-gray-600">Change your account password for security</p>
+            </div>
+            <button class="px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition-colors">
+              Reset Password
+            </button>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 border border-red-200 rounded-lg">
+            <div>
+              <h3 class="font-medium text-gray-900">Delete Account</h3>
+              <p class="text-sm text-gray-600">Permanently remove your account and all data</p>
+            </div>
+            <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

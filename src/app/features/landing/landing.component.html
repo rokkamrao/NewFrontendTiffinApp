@@ -1,0 +1,424 @@
+<!-- Landing Page -->
+<div class="landing-page">
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-section">
+    <div class="hero-bg">
+      <div class="container">
+        <div class="row align-items-center min-vh-100 py-5">
+          <div class="col-lg-6">
+            <div class="hero-content">
+              <h1 class="hero-title mb-4">
+                Healthy Meals, Delivered Daily in 
+                <span class="text-highlight">Eco-Friendly Tiffin Boxes</span>
+              </h1>
+              <p class="hero-subtitle mb-4">
+                Nutritious, hygienic, and convenient subscription plans tailored for you. 
+                100% plastic-free packaging with nutritionist-approved meals.
+              </p>
+              
+              <!-- Location Indicator -->
+              <div class="location-indicator mb-4">
+                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                <span>Delivering to <strong>{{ currentLocation }}</strong></span>
+              </div>
+
+              <!-- CTA Buttons -->
+              <div class="hero-cta d-flex flex-column flex-sm-row gap-3 mb-4">
+                <button class="btn btn-primary btn-lg px-4" (click)="goToSubscription($event)">
+                  <i class="bi bi-calendar-check me-2"></i>View Subscription Plans
+                </button>
+                <button class="btn btn-outline-primary btn-lg px-4" (click)="goToMenu($event)">
+                  <i class="bi bi-grid-3x3-gap me-2"></i>Browse Menu
+                </button>
+              </div>
+
+              <!-- Quick Stats -->
+              <div class="hero-stats d-flex flex-wrap gap-4">
+                <div class="stat-item">
+                  <div class="stat-number">10K+</div>
+                  <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">50+</div>
+                  <div class="stat-label">Menu Items</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-number">100%</div>
+                  <div class="stat-label">Plastic-Free</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-6">
+            <div class="hero-image">
+              <div class="tiffin-showcase">
+                <div class="tiffin-box tiffin-1">🍱</div>
+                <div class="tiffin-box tiffin-2">🥗</div>
+                <div class="tiffin-box tiffin-3">🍛</div>
+                <div class="eco-badge">
+                  <i class="bi bi-recycle"></i>
+                  <span>100% Eco-Friendly</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Key Value Propositions -->
+  <section id="value-props" class="value-props-section py-5">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Why Choose TiffinApp?</h2>
+        <p class="section-subtitle">Experience the perfect blend of health, convenience, and sustainability</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">👨‍⚕️</div>
+            <h3 class="prop-title">Nutritionist-Approved</h3>
+            <p class="prop-description">Every meal is designed by certified nutritionists to ensure balanced nutrition and optimal health benefits.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">♻️</div>
+            <h3 class="prop-title">100% Plastic-Free</h3>
+            <p class="prop-description">Eco-friendly reusable tiffin boxes that reduce waste and protect our environment for future generations.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">📅</div>
+            <h3 class="prop-title">Flexible Plans</h3>
+            <p class="prop-description">Daily, weekly, or monthly subscriptions with easy pause, skip, and modify options to fit your lifestyle.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">📱</div>
+            <h3 class="prop-title">Real-time Tracking</h3>
+            <p class="prop-description">Track your delivery in real-time with GPS-enabled tracking and receive notifications every step of the way.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">⏯️</div>
+            <h3 class="prop-title">Easy Management</h3>
+            <p class="prop-description">Pause, skip, or modify your subscriptions anytime through our user-friendly app interface.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-4">
+          <div class="value-prop-card text-center">
+            <div class="prop-icon">🎁</div>
+            <h3 class="prop-title">Referral Rewards</h3>
+            <p class="prop-description">Earn rewards and discounts by referring friends and family to join our healthy eating community.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. How It Works -->
+  <section id="how-it-works" class="how-it-works-section py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Three simple steps to start your healthy eating journey</p>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="how-it-works-card text-center">
+            <div class="step-number">1</div>
+            <div class="step-icon">📝</div>
+            <h3 class="step-title">Subscribe</h3>
+            <p class="step-description">Choose your preferred subscription plan and customize your meal preferences based on your dietary needs.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="how-it-works-card text-center">
+            <div class="step-number">2</div>
+            <div class="step-icon">🚚</div>
+            <h3 class="step-title">Deliver</h3>
+            <p class="step-description">Fresh, healthy meals delivered daily in our eco-friendly reusable tiffin boxes right to your doorstep.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="how-it-works-card text-center">
+            <div class="step-number">3</div>
+            <div class="step-icon">🔄</div>
+            <h3 class="step-title">Return & Reuse</h3>
+            <p class="step-description">Return empty tiffin boxes with your next delivery. We clean, sanitize, and reuse them for a sustainable cycle.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Sample Menu Highlights -->
+  <section id="menu-highlights" class="menu-highlights-section py-5">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+          <h2 class="section-title mb-0">Today's Featured Menu</h2>
+          <p class="section-subtitle mb-0">Nutritionist-approved meals made with fresh ingredients</p>
+        </div>
+        <button class="btn btn-outline-primary" (click)="goToMenu($event)">
+          Explore Full Menu <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+      </div>
+      
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3" *ngFor="let item of featuredMenuItems">
+          <div class="menu-card">
+            <div class="menu-card-image">
+              <div class="food-emoji">{{ item.image }}</div>
+              <div class="dietary-badge" [ngClass]="{'veg': item.isVeg, 'non-veg': !item.isVeg}">
+                <i class="bi" [ngClass]="item.isVeg ? 'bi-circle-fill' : 'bi-triangle-fill'"></i>
+                {{ item.isVeg ? 'Veg' : 'Non-Veg' }}
+              </div>
+            </div>
+            
+            <div class="menu-card-content">
+              <h3 class="menu-item-name">{{ item.name }}</h3>
+              <p class="menu-item-description">{{ item.description }}</p>
+              
+              <div class="menu-item-tags mb-2">
+                <span class="tag" *ngFor="let tag of item.tags">{{ tag }}</span>
+              </div>
+              
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="menu-item-price">₹{{ item.price }}</div>
+                <div class="menu-item-rating">
+                  <i class="bi bi-star-fill text-warning me-1"></i>
+                  {{ item.rating }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Customer Testimonials -->
+  <section id="testimonials" class="testimonials-section py-5 bg-light">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-subtitle">Real reviews from our satisfied customers</p>
+      </div>
+      
+      <div class="testimonial-carousel">
+        <div class="testimonial-container">
+          <div class="testimonial-card" *ngFor="let testimonial of testimonials; let i = index" 
+               [ngClass]="{'active': i === currentTestimonialIndex}">
+            <div class="testimonial-content">
+              <div class="testimonial-rating mb-3">
+                <i class="bi bi-star-fill text-warning" *ngFor="let star of getStarArray(testimonial.rating)"></i>
+              </div>
+              <blockquote class="testimonial-quote">
+                "{{ testimonial.comment }}"
+              </blockquote>
+              <div class="testimonial-author">
+                <div class="author-avatar">{{ testimonial.image }}</div>
+                <div class="author-info">
+                  <div class="author-name">{{ testimonial.name }}</div>
+                  <div class="author-location">{{ testimonial.location }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Carousel Controls -->
+        <div class="testimonial-controls text-center mt-4">
+          <button class="btn btn-outline-secondary btn-sm me-2" (click)="previousTestimonial()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="btn btn-outline-secondary btn-sm" (click)="nextTestimonial()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+        
+        <!-- Carousel Indicators -->
+        <div class="testimonial-indicators text-center mt-3">
+          <button 
+            class="indicator" 
+            *ngFor="let testimonial of testimonials; let i = index"
+            [ngClass]="{'active': i === currentTestimonialIndex}"
+            (click)="goToTestimonial(i)">
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Sign-Up Prompt / Lead Capture -->
+  <section class="signup-section py-5">
+    <div class="container">
+      <div class="signup-card text-center">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="signup-title mb-3">Ready to Start Your Healthy Journey?</h2>
+            <p class="signup-subtitle mb-4">
+              Subscribe today and get <strong>₹100 off</strong> your first order. 
+              Join thousands of satisfied customers enjoying nutritious meals daily.
+            </p>
+            
+            <div class="signup-cta">
+              <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mb-4">
+                <button class="btn btn-primary btn-lg px-5" (click)="goToAuth($event)">
+                  <i class="bi bi-person-plus me-2"></i>Start Free Trial
+                </button>
+                <button class="btn btn-outline-primary btn-lg px-5" (click)="goToSubscription($event)">
+                  <i class="bi bi-eye me-2"></i>View Plans
+                </button>
+              </div>
+              
+              <!-- Newsletter Signup -->
+              <div class="newsletter-signup">
+                <p class="mb-3">Or subscribe to our newsletter for healthy eating tips and special offers</p>
+                <form class="newsletter-form d-flex flex-column flex-sm-row gap-2 justify-content-center" 
+                      (ngSubmit)="subscribeNewsletter()" #newsletterForm="ngForm">
+                  <input 
+                    type="email" 
+                    class="form-control" 
+                    placeholder="Enter your email address"
+                    [(ngModel)]="emailAddress"
+                    name="email"
+                    required
+                    email
+                    [disabled]="isNewsletterLoading">
+                  <button 
+                    type="submit" 
+                    class="btn btn-secondary"
+                    [disabled]="!newsletterForm.valid || isNewsletterLoading">
+                    <span *ngIf="isNewsletterLoading" class="spinner-border spinner-border-sm me-2"></span>
+                    Subscribe
+                  </button>
+                </form>
+                <div *ngIf="newsletterMessage" class="newsletter-message mt-2" 
+                     [ngClass]="{'text-success': newsletterMessage.includes('Thank'), 'text-danger': !newsletterMessage.includes('Thank')}">
+                  {{ newsletterMessage }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Footer -->
+  <footer id="footer" class="footer-section bg-dark text-light py-5">
+    <div class="container">
+      <div class="row g-4">
+        <!-- Company Info -->
+        <div class="col-md-6 col-lg-4">
+          <div class="footer-brand mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <div class="logo-circle me-3">
+                <span class="fw-bold text-white">T</span>
+              </div>
+              <span class="fw-bold fs-4">TiffinApp</span>
+            </div>
+            <p class="footer-description">
+              Delivering healthy, nutritious meals in eco-friendly tiffin boxes. 
+              Making sustainable eating convenient for everyone.
+            </p>
+          </div>
+          
+          <!-- Social Media -->
+          <div class="social-links">
+            <h5 class="footer-heading">Follow Us</h5>
+            <div class="d-flex gap-3">
+              <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-linkedin"></i></a>
+              <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="col-md-6 col-lg-2">
+          <h5 class="footer-heading">Quick Links</h5>
+          <ul class="footer-links">
+            <li><a href="#" (click)="goToMenu($event)">Menu</a></li>
+            <li><a href="#" (click)="goToSubscription($event)">Subscription Plans</a></li>
+            <li><a href="#" (click)="scrollToSection('how-it-works', $event)">How It Works</a></li>
+            <li><a href="#" (click)="scrollToSection('value-props', $event)">About Us</a></li>
+          </ul>
+        </div>
+        
+        <!-- Support -->
+        <div class="col-md-6 col-lg-2">
+          <h5 class="footer-heading">Support</h5>
+          <ul class="footer-links">
+            <li><a href="/support">Help Center</a></li>
+            <li><a href="/support">Contact Us</a></li>
+            <li><a href="/support">FAQs</a></li>
+            <li><a href="/support">Track Order</a></li>
+          </ul>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="col-md-6 col-lg-4">
+          <h5 class="footer-heading">Contact Information</h5>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="bi bi-geo-alt-fill me-2"></i>
+              <span>Hyderabad, Telangana, India</span>
+            </div>
+            <div class="contact-item">
+              <i class="bi bi-telephone-fill me-2"></i>
+              <span>+91 98765 43210</span>
+            </div>
+            <div class="contact-item">
+              <i class="bi bi-envelope-fill me-2"></i>
+              <span>hello@tiffinapp.com</span>
+            </div>
+            <div class="contact-item">
+              <i class="bi bi-clock-fill me-2"></i>
+              <span>Mon - Sat: 7:00 AM - 10:00 PM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer Bottom -->
+      <div class="footer-bottom mt-5 pt-4 border-top border-secondary">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="mb-0">&copy; 2024 TiffinApp. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <div class="footer-legal">
+              <a href="/privacy">Privacy Policy</a>
+              <span class="mx-2">|</span>
+              <a href="/terms">Terms of Service</a>
+              <span class="mx-2">|</span>
+              <a href="/refund">Refund Policy</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>

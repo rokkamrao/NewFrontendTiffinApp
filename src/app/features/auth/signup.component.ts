@@ -1,4 +1,4 @@
-import { Component, PLATFORM_ID, inject } from '@angular/core';
+import { Component, PLATFORM_ID, inject, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent {
+export class SignupComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -72,6 +72,27 @@ export class SignupComponent {
   constructor() {
     // Get return URL from query params
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+  }
+
+  ngOnInit(): void {
+    console.log('[Signup] ngOnInit - Checking if user is already logged in');
+    
+    // Only perform authentication check in browser (not during SSR)
+    if (isPlatformBrowser(this.platformId)) {
+      const isAuthenticated = this.authService.isLoggedIn();
+      console.log('[Signup] Authentication status:', isAuthenticated);
+      
+      if (isAuthenticated) {
+        console.log('[Signup] User already logged in, redirecting to:', this.returnUrl);
+        // User is already logged in, redirect them away from signup page
+        this.router.navigate([this.returnUrl]);
+        return;
+      }
+      
+      console.log('[Signup] User not authenticated, showing signup form');
+    } else {
+      console.log('[Signup] SSR detected, skipping auth check');
+    }
   }
 
   get dietaryArray() { return this.form.get('dietary') as FormArray; }

@@ -1,43 +1,96 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map, switchMap, catchError } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Subscription, SubscriptionStatus, SubscriptionModel, SubscriptionPlan, SubscriptionPlanType } from '../models/subscription.model';
-
-const STORAGE_KEY = 'tk_subscription_v1';
 
 @Injectable({ providedIn: 'root' })
 export class SubscriptionService {
   private api = inject(ApiService);
-  private _sub: SubscriptionModel | null = null;
 
-  plans: SubscriptionPlan[] = [
-    { id: 'p1', name: 'Basic', pricePerMonth: 1299, mealsPerDay: 1, features: ['1 meal/day', 'Veg only', 'Change menu daily'] },
-    { id: 'p2', name: 'Standard', pricePerMonth: 1899, mealsPerDay: 2, features: ['2 meals/day', 'Veg/Non-Veg', 'Priority support'] },
-    { id: 'p3', name: 'Premium', pricePerMonth: 2499, mealsPerDay: 3, features: ['3 meals/day', 'Customizable', 'Free add-ons'] },
-  ];
-
-  constructor(){ this.load(); }
-
-  // Legacy methods for backward compatibility
-  getCurrent(): Observable<SubscriptionModel | null> { return of(this._sub); }
-  getPlans(): Observable<SubscriptionPlan[]> { return of(this.plans); }
-  subscribe(planId: string): Observable<SubscriptionModel> {
-    const plan = this.plans.find(p => p.id === planId)!;
-    const sub: SubscriptionModel = {
-      id: 's' + Date.now(),
-      plan,
-      status: 'Active',
-      startedAt: new Date().toISOString(),
-      nextBillingDate: new Date(Date.now() + 30*24*60*60*1000).toISOString(),
-      remainingMeals: plan.mealsPerDay * 30
-    };
-    this._sub = sub; this.save();
-    return of(sub);
+  constructor(){ 
+    // No longer loading from localStorage - all data comes from API
   }
-  pause(): Observable<SubscriptionModel | null> { if(this._sub){ this._sub.status = 'Paused'; this.save(); } return of(this._sub); }
-  resume(): Observable<SubscriptionModel | null> { if(this._sub){ this._sub.status = 'Active'; this.save(); } return of(this._sub); }
-  cancel(): Observable<boolean> { this._sub = null; this.save(); return of(true); }
+
+  /**
+   * Fetch subscription plans from API
+   */
+  fetchPlans(): Observable<SubscriptionPlan[]> {
+    console.log('[SubscriptionService] fetchPlans() - Fetching plans from API');
+    return this.api.get<SubscriptionPlan[]>('/subscription-plans').pipe(
+      tap({
+        next: (plans) => console.log('[SubscriptionService] fetchPlans() - Success:', plans),
+        error: (error) => console.error('[SubscriptionService] fetchPlans() - Error:', error)
+      })
+    );
+  }
+
+  // Legacy methods for backward compatibility - now using API
+  getCurrent(): Observable<SubscriptionModel | null> { 
+    console.log('[SubscriptionService] getCurrent() - Fetching current subscription from API');
+    return this.list().pipe(
+      map(subs => subs.length > 0 ? subs[0] as unknown as SubscriptionModel : null),
+      catchError(() => of(null))
+    );
+  }
+  
+  getPlans(): Observable<SubscriptionPlan[]> { 
+    console.log('[SubscriptionService] getPlans() - Using legacy method, redirecting to fetchPlans()');
+    return this.fetchPlans(); 
+  }
+  
+  subscribe(planId: string): Observable<SubscriptionModel> {
+    console.log('[SubscriptionService] subscribe() - Creating subscription for plan:', planId);
+    const subscription = {
+      planId: planId,
+      status: SubscriptionStatus.ACTIVE
+    };
+    return this.create(subscription).pipe(
+      map(sub => sub as unknown as SubscriptionModel)
+    );
+  }
+  
+  pause(): Observable<SubscriptionModel | null> { 
+    console.log('[SubscriptionService] pause() - Using API to pause subscription');
+    return this.getCurrent().pipe(
+      switchMap(current => {
+        if (current) {
+          return this.updateStatus(current.id as unknown as number, SubscriptionStatus.PAUSED).pipe(
+            map(sub => sub as unknown as SubscriptionModel)
+          );
+        }
+        return of(null);
+      })
+    );
+  }
+  
+  resume(): Observable<SubscriptionModel | null> { 
+    console.log('[SubscriptionService] resume() - Using API to resume subscription');
+    return this.getCurrent().pipe(
+      switchMap(current => {
+        if (current) {
+          return this.updateStatus(current.id as unknown as number, SubscriptionStatus.ACTIVE).pipe(
+            map(sub => sub as unknown as SubscriptionModel)
+          );
+        }
+        return of(null);
+      })
+    );
+  }
+  
+  cancel(): Observable<boolean> { 
+    console.log('[SubscriptionService] cancel() - Using API to cancel subscription');
+    return this.getCurrent().pipe(
+      switchMap(current => {
+        if (current) {
+          return this.updateStatus(current.id as unknown as number, SubscriptionStatus.CANCELLED).pipe(
+            map(() => true)
+          );
+        }
+        return of(true);
+      })
+    );
+  }
 
   // New API-based methods
   /**
@@ -91,7 +144,4 @@ export class SubscriptionService {
       })
     );
   }
-
-  private save(){ try{ if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') localStorage.setItem(STORAGE_KEY, JSON.stringify(this._sub)); }catch(e){}}
-  private load(){ try{ if (typeof window !== 'undefined' && typeof localStorage !== 'undefined'){ const r = localStorage.getItem(STORAGE_KEY); if(r) this._sub = JSON.parse(r); } }catch(e){} }
 }

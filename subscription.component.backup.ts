@@ -1,20 +1,18 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil, combineLatest } from 'rxjs';
+import { Subject, takeUntil, combineLatest, of } from 'rxjs';
 
 // Services
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { MembershipService, MembershipPlan, UserMembership, LoyaltyPoints, SubscriptionRequest } from '../../core/services/membership.service';
-
-// Components
-import { DsButton } from '../../design-system/button.component';
+import { AuthUtilsService } from '../../core/services/auth-utils.service';
 
 @Component({
   selector: 'app-subscription',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, DsButton],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './subscription.component.html'
 })
 export class SubscriptionComponent implements OnInit, OnDestroy {
@@ -29,6 +27,7 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   promoCode: string = '';
   loading = false;
   error: string | null = null;
+  isAuthenticated = false;
   
   // UI State
   showPlanComparison = false;
@@ -41,7 +40,9 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   constructor(
     private ss: SubscriptionService,
-    private membershipService: MembershipService
+    private membershipService: MembershipService,
+    private authUtils: AuthUtilsService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -58,30 +59,51 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
 
   private loadData(): void {
     this.loading = true;
+    this.isAuthenticated = this.authUtils.isAuthenticated();
     
-    // Load membership data
-    combineLatest([
-      this.membershipService.getPlans(),
-      this.membershipService.getCurrentMembership(),
-      this.membershipService.getLoyaltyPoints()
-    ]).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe({
-      next: ([plans, membership, loyalty]) => {
-        this.plans = plans;
-        this.currentMembership = membership;
-        this.loyaltyPoints = loyalty;
-        this.loading = false;
-        
-        // Set active tab based on membership status
-        if (membership) {
-          this.activeTab = 'current';
+    if (this.isAuthenticated) {
+      // Load user-specific membership data for authenticated users
+      combineLatest([
+        this.membershipService.getPlans(),
+        this.membershipService.getCurrentMembership(),
+        this.membershipService.getLoyaltyPoints()
+      ]).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: ([plans, membership, loyalty]) => {
+          this.plans = plans;
+          this.currentMembership = membership;
+          this.loyaltyPoints = loyalty;
+          this.loading = false;
+          
+          // Set active tab based on membership status
+          if (membership) {
+            this.activeTab = 'current';
+          }
+        },
+        error: (error) => {
+          console.error('Error loading membership data:', error);
+          this.error = 'Failed to load membership data';
+          this.loading = false;
         }
-      },
-      error: (error) => {
-        console.error('Error loading membership data:', error);
-        this.error = 'Failed to load membership data';
-        this.loading = false;
+      });
+    } else {
+      // Load only plans for non-authenticated users
+      this.membershipService.getPlans().pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (plans) => {
+          this.plans = plans;
+          this.loading = false;
+          this.activeTab = 'plans'; // Force plans tab for guests
+        },
+        error: (error) => {
+          console.error('Error loading plans:', error);
+          this.error = 'Failed to load subscription plans';
+          this.loading = false;
+        }
+      });
+    }
       }
     });
 
@@ -117,11 +139,26 @@ export class SubscriptionComponent implements OnInit, OnDestroy {
   // ==================== PLAN SUBSCRIPTION ====================
 
   selectPlan(planId: number): void {
+    // Allow plan selection for browsing, but redirect to login when subscribing
     this.selectedPlanId = planId;
     this.error = null;
+    
+    // If not authenticated, show a helpful message
+    if (!this.authUtils.isAuthenticated()) {
+      console.log('Plan selected by guest user, will need to login to subscribe');
+    }
   }
 
   subscribeToPlan(plan?: any): void {
+    // Check authentication first
+    if (!this.authUtils.isAuthenticated()) {
+      console.log('User not authenticated, redirecting to login');
+      this.router.navigate(['/auth/login'], {
+        queryParams: { returnUrl: encodeURIComponent('/subscription') }
+      });
+      return;
+    }
+
     // Handle legacy method call
     if (plan && typeof plan === 'object' && plan.id) {
       this.selectedPlanId = plan.id;

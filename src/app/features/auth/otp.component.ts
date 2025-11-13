@@ -241,12 +241,12 @@ export class VerifyOtpComponent implements OnInit, OnDestroy, AfterViewInit {
               localStorage.setItem('userProfile', JSON.stringify(profile));
             } catch {}
             localStorage.removeItem('pendingSignup');
-            this.router.navigate(['/home']);
+            this.router.navigate(['/dashboard']);
             return;
           }
 
-          // For login-only flow, just go to Home
-          this.router.navigate(['/home']);
+          // For login-only flow, just go to Dashboard
+          this.router.navigate(['/dashboard']);
         }
       } else {
         this.otpError = 'Invalid OTP. Please try again.';

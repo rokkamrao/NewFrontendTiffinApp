@@ -1,10 +1,10 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { App } from './app/app';
+import { AppComponent } from './app/app';
 
 // Bootstrap lifecycle logging
 console.log('[Bootstrap] Starting bootstrapApplication at', new Date().toISOString());
-bootstrapApplication(App, appConfig)
+bootstrapApplication(AppComponent, appConfig)
   .then((ref) => {
     const rootCmp = ref.components?.[0]?.instance as any;
     const rootName = rootCmp?.constructor?.name ?? 'UnknownRootComponent';

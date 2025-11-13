@@ -328,10 +328,10 @@ export class AdminLoginComponent {
       password: this.password
     };
 
-    this.authService.login(loginRequest as any).subscribe({
+    this.authService.login(this.emailOrPhone, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        if (response.success) {
+        if (response && response.success) {
           // Check if user has admin role from response
           console.log('[AdminLogin] Login response:', response);
           const isAdmin = response.role === 'ADMIN';
@@ -347,7 +347,7 @@ export class AdminLoginComponent {
             this.authService.logout();
           }
         } else {
-          this.errorMessage = response.message || 'Invalid admin credentials';
+          this.errorMessage = response?.message || 'Invalid admin credentials';
         }
       },
       error: (error) => {

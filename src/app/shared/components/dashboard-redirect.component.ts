@@ -58,9 +58,9 @@ export class DashboardRedirectComponent implements OnInit {
           this.router.navigate(['/delivery/dashboard']);
           break;
         default:
-          // Regular customer - redirect to account page
-          console.log('[DashboardRedirect] Regular user, redirecting to account');
-          this.router.navigate(['/account']);
+          // Regular customer - redirect to home
+          console.log('[DashboardRedirect] Regular user, redirecting to home');
+          this.router.navigate(['/home']);
           break;
       }
     } catch (error) {

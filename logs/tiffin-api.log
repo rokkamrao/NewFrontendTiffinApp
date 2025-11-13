@@ -1,0 +1,1131 @@
+2025-11-07 17:44:46,391 INFO  [background-preinit] [trace=] [user=] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2025-11-07 17:44:46,462 INFO  [main] [trace=] [user=] com.tiffin.TiffinApiApplication - Starting TiffinApiApplication v0.0.1-SNAPSHOT using Java 21.0.8 with PID 12704 (D:\Food Delivery app\tiffin-api\target\tiffin-api-0.0.1-SNAPSHOT.jar started by Tamoghna in D:\Food Delivery app\tiffin-app)
+2025-11-07 17:44:46,464 INFO  [main] [trace=] [user=] com.tiffin.TiffinApiApplication - No active profile set, falling back to 1 default profile: "default"
+2025-11-07 17:44:47,547 INFO  [main] [trace=] [user=] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-07 17:44:47,688 INFO  [main] [trace=] [user=] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 129 ms. Found 15 JPA repository interfaces.
+2025-11-07 17:44:48,544 INFO  [main] [trace=] [user=] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8081 (http)
+2025-11-07 17:44:48,575 INFO  [main] [trace=] [user=] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8081"]
+2025-11-07 17:44:48,579 INFO  [main] [trace=] [user=] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-11-07 17:44:48,580 INFO  [main] [trace=] [user=] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-11-07 17:44:48,627 INFO  [main] [trace=] [user=] o.a.c.c.C.[.[localhost].[/api] - Initializing Spring embedded WebApplicationContext
+2025-11-07 17:44:48,628 INFO  [main] [trace=] [user=] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 2098 ms
+2025-11-07 17:44:48,843 INFO  [main] [trace=] [user=] o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-11-07 17:44:48,923 INFO  [main] [trace=] [user=] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-11-07 17:44:48,977 INFO  [main] [trace=] [user=] o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-11-07 17:44:49,390 INFO  [main] [trace=] [user=] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-11-07 17:44:49,419 INFO  [main] [trace=] [user=] com.zaxxer.hikari.HikariDataSource - TiffinHikariCP - Starting...
+2025-11-07 17:44:49,566 INFO  [main] [trace=] [user=] com.zaxxer.hikari.pool.HikariPool - TiffinHikariCP - Added connection org.postgresql.jdbc.PgConnection@7c47e077
+2025-11-07 17:44:49,568 INFO  [main] [trace=] [user=] com.zaxxer.hikari.HikariDataSource - TiffinHikariCP - Start completed.
+2025-11-07 17:44:49,652 INFO  [main] [trace=] [user=] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (TiffinHikariCP)']
+	Database driver: undefined/unknown
+	Database version: 18.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-11-07 17:44:50,999 INFO  [main] [trace=] [user=] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-11-07 17:44:51,011 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    set client_min_messages = WARNING
+2025-11-07 17:44:51,013 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "addresses" 
+       drop constraint if exists "FK1o3cf1oq29twu2e49lxh6u8pg"
+2025-11-07 17:44:51,023 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "dish_dietary_tags" 
+       drop constraint if exists "FKkcjtpklna4ym5c19ym2pmjkuq"
+2025-11-07 17:44:51,025 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "dish_tags" 
+       drop constraint if exists "FK8fenw11chwbd31jgayrx86vll"
+2025-11-07 17:44:51,026 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "membership_plan_features" 
+       drop constraint if exists "FKsny3a8mx1j0x10oy32nbv53x0"
+2025-11-07 17:44:51,028 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "order_items" 
+       drop constraint if exists "FKrnpho6nwth59gol8v9lyjb9sj"
+2025-11-07 17:44:51,029 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "order_items" 
+       drop constraint if exists "FK6gg8woymk43fp55jtjlgkd1eh"
+2025-11-07 17:44:51,030 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "orders" 
+       drop constraint if exists "FK35r28bu0fnis2c0ed2pels2mb"
+2025-11-07 17:44:51,032 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "orders" 
+       drop constraint if exists "FKitd0598xtxfyrro0df4ey8kdd"
+2025-11-07 17:44:51,033 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "user_memberships" 
+       drop constraint if exists "FK67d4njd6wxctoxt50x2j2ueyh"
+2025-11-07 17:44:51,035 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "addresses" cascade
+2025-11-07 17:44:51,055 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "customer_testimonials" cascade
+2025-11-07 17:44:51,062 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "dish_dietary_tags" cascade
+2025-11-07 17:44:51,064 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "dish_tags" cascade
+2025-11-07 17:44:51,068 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "dishes" cascade
+2025-11-07 17:44:51,072 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "featured_dishes" cascade
+2025-11-07 17:44:51,073 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "landing_analytics" cascade
+2025-11-07 17:44:51,074 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "loyalty_points" cascade
+2025-11-07 17:44:51,078 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "loyalty_transactions" cascade
+2025-11-07 17:44:51,083 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "membership_plan_features" cascade
+2025-11-07 17:44:51,084 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "membership_plans" cascade
+2025-11-07 17:44:51,090 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "newsletter_subscriptions" cascade
+2025-11-07 17:44:51,096 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "notifications" cascade
+2025-11-07 17:44:51,100 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "order_items" cascade
+2025-11-07 17:44:51,105 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "orders" cascade
+2025-11-07 17:44:51,111 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "payments" cascade
+2025-11-07 17:44:51,114 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "reviews" cascade
+2025-11-07 17:44:51,119 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "uploaded_images" cascade
+2025-11-07 17:44:51,129 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "user_memberships" cascade
+2025-11-07 17:44:51,134 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    drop table if exists "users" cascade
+2025-11-07 17:44:51,148 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "addresses" (
+        "active" boolean not null,
+        "isDefault" boolean not null,
+        "latitude" float(53),
+        "longitude" float(53),
+        "createdAt" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6) not null,
+        "user_id" bigint not null,
+        "zipCode" varchar(20) not null,
+        "apartment" varchar(100),
+        "city" varchar(100) not null,
+        "country" varchar(100) not null,
+        "label" varchar(100) not null,
+        "state" varchar(100) not null,
+        "deliveryInstructions" varchar(500),
+        "landmark" varchar(500),
+        "street" varchar(255) not null,
+        primary key ("id")
+    )
+2025-11-07 17:44:51,169 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "customer_testimonials" (
+        "display_order" integer,
+        "is_approved" boolean,
+        "is_featured" boolean,
+        "is_verified" boolean,
+        "rating" integer not null check (("rating"<=5) and ("rating">=1)),
+        "approved_at" timestamp(6),
+        "created_at" timestamp(6),
+        "id" bigint generated by default as identity,
+        "order_id" bigint,
+        "user_id" bigint,
+        "comment" varchar(1000) not null,
+        "avatar_emoji" varchar(255),
+        "customer_image_url" varchar(255),
+        "customer_name" varchar(255) not null,
+        "location" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,179 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "dish_dietary_tags" (
+        "dish_id" bigint not null,
+        "dietary_tag" varchar(255)
+    )
+2025-11-07 17:44:51,181 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "dish_tags" (
+        "dish_id" bigint not null,
+        "tag" varchar(255)
+    )
+2025-11-07 17:44:51,184 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "dishes" (
+        "available" boolean,
+        "calories" integer,
+        "preparationTime" integer,
+        "price" numeric(38,2) not null,
+        "rating" float(53),
+        "reviewCount" integer,
+        "spicyLevel" integer,
+        "id" bigint generated by default as identity,
+        "cuisine" varchar(255),
+        "description" varchar(255),
+        "imageUrl" varchar(255),
+        "name" varchar(255) not null,
+        "type" varchar(255) not null check ("type" in ('VEG','NON_VEG')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,193 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "featured_dishes" (
+        "average_rating" numeric(2,1),
+        "calories_per_serving" integer,
+        "discounted_price" numeric(8,2),
+        "display_order" integer,
+        "is_available" boolean not null,
+        "is_featured" boolean not null,
+        "is_gluten_free" boolean not null,
+        "is_popular" boolean not null,
+        "is_vegan" boolean not null,
+        "is_vegetarian" boolean not null,
+        "preparation_time_minutes" integer,
+        "price" numeric(8,2) not null,
+        "total_reviews" integer not null,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "category" varchar(255),
+        "cuisine_type" varchar(255),
+        "description" "TEXT",
+        "dish_name" varchar(255) not null,
+        "image_url" varchar(255),
+        "ingredients" "TEXT",
+        "nutritional_info" "TEXT",
+        "short_description" varchar(255),
+        "spice_level" varchar(255),
+        "tags" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,202 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    create table "featured_dishes" (
+        "average_rating" numeric(2,1),
+        "calories_per_serving" integer,
+        "discounted_price" numeric(8,2),
+        "display_order" integer,
+        "is_available" boolean not null,
+        "is_featured" boolean not null,
+        "is_gluten_free" boolean not null,
+        "is_popular" boolean not null,
+        "is_vegan" boolean not null,
+        "is_vegetarian" boolean not null,
+        "preparation_time_minutes" integer,
+        "price" numeric(8,2) not null,
+        "total_reviews" integer not null,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "category" varchar(255),
+        "cuisine_type" varchar(255),
+        "description" "TEXT",
+        "dish_name" varchar(255) not null,
+        "image_url" varchar(255),
+        "ingredients" "TEXT",
+        "nutritional_info" "TEXT",
+        "short_description" varchar(255),
+        "spice_level" varchar(255),
+        "tags" varchar(255),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 804]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    create table "featured_dishes" (
+        "average_rating" numeric(2,1),
+        "calories_per_serving" integer,
+        "discounted_price" numeric(8,2),
+        "display_order" integer,
+        "is_available" boolean not null,
+        "is_featured" boolean not null,
+        "is_gluten_free" boolean not null,
+        "is_popular" boolean not null,
+        "is_vegan" boolean not null,
+        "is_vegetarian" boolean not null,
+        "preparation_time_minutes" integer,
+        "price" numeric(8,2) not null,
+        "total_reviews" integer not null,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "category" varchar(255),
+        "cuisine_type" varchar(255),
+        "description" "TEXT",
+        "dish_name" varchar(255) not null,
+        "image_url" varchar(255),
+        "ingredients" "TEXT",
+        "nutritional_info" "TEXT",
+        "short_description" varchar(255),
+        "spice_level" varchar(255),
+        "tags" varchar(255),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 804]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createTables(SchemaCreatorImpl.java:430)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createSequencesTablesConstraints(SchemaCreatorImpl.java:346)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: type "TEXT" does not exist
+  Position: 804
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 44 common frames omitted
+2025-11-07 17:44:51,206 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "landing_analytics" (
+        "click_x" integer,
+        "click_y" integer,
+        "latitude" float(53),
+        "longitude" float(53),
+        "scroll_percentage" integer,
+        "time_on_page_seconds" integer,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "user_id" bigint,
+        "additional_data" "TEXT",
+        "browser_name" varchar(255),
+        "browser_version" varchar(255),
+        "city" varchar(255),
+        "country" varchar(255),
+        "device_type" varchar(255),
+        "element_id" varchar(255),
+        "element_text" varchar(255),
+        "event_category" varchar(255),
+        "event_type" varchar(255) not null,
+        "form_data" "TEXT",
+        "ip_address" varchar(255),
+        "operating_system" varchar(255),
+        "page_section" varchar(255),
+        "referrer" varchar(255),
+        "region" varchar(255),
+        "screen_resolution" varchar(255),
+        "session_id" varchar(255),
+        "user_agent" "TEXT",
+        "utm_campaign" varchar(255),
+        "utm_content" varchar(255),
+        "utm_medium" varchar(255),
+        "utm_source" varchar(255),
+        "utm_term" varchar(255),
+        "viewport_size" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,208 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    create table "landing_analytics" (
+        "click_x" integer,
+        "click_y" integer,
+        "latitude" float(53),
+        "longitude" float(53),
+        "scroll_percentage" integer,
+        "time_on_page_seconds" integer,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "user_id" bigint,
+        "additional_data" "TEXT",
+        "browser_name" varchar(255),
+        "browser_version" varchar(255),
+        "city" varchar(255),
+        "country" varchar(255),
+        "device_type" varchar(255),
+        "element_id" varchar(255),
+        "element_text" varchar(255),
+        "event_category" varchar(255),
+        "event_type" varchar(255) not null,
+        "form_data" "TEXT",
+        "ip_address" varchar(255),
+        "operating_system" varchar(255),
+        "page_section" varchar(255),
+        "referrer" varchar(255),
+        "region" varchar(255),
+        "screen_resolution" varchar(255),
+        "session_id" varchar(255),
+        "user_agent" "TEXT",
+        "utm_campaign" varchar(255),
+        "utm_content" varchar(255),
+        "utm_medium" varchar(255),
+        "utm_source" varchar(255),
+        "utm_term" varchar(255),
+        "viewport_size" varchar(255),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 430]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    create table "landing_analytics" (
+        "click_x" integer,
+        "click_y" integer,
+        "latitude" float(53),
+        "longitude" float(53),
+        "scroll_percentage" integer,
+        "time_on_page_seconds" integer,
+        "created_at" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updated_at" timestamp(6),
+        "user_id" bigint,
+        "additional_data" "TEXT",
+        "browser_name" varchar(255),
+        "browser_version" varchar(255),
+        "city" varchar(255),
+        "country" varchar(255),
+        "device_type" varchar(255),
+        "element_id" varchar(255),
+        "element_text" varchar(255),
+        "event_category" varchar(255),
+        "event_type" varchar(255) not null,
+        "form_data" "TEXT",
+        "ip_address" varchar(255),
+        "operating_system" varchar(255),
+        "page_section" varchar(255),
+        "referrer" varchar(255),
+        "region" varchar(255),
+        "screen_resolution" varchar(255),
+        "session_id" varchar(255),
+        "user_agent" "TEXT",
+        "utm_campaign" varchar(255),
+        "utm_content" varchar(255),
+        "utm_medium" varchar(255),
+        "utm_source" varchar(255),
+        "utm_term" varchar(255),
+        "viewport_size" varchar(255),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 430]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createTables(SchemaCreatorImpl.java:430)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createSequencesTablesConstraints(SchemaCreatorImpl.java:346)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: type "TEXT" does not exist
+  Position: 430
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 44 common frames omitted
+2025-11-07 17:44:51,209 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "loyalty_points" (
+        "availablePoints" integer not null,
+        "expiredPoints" integer not null,
+        "lifetimeEarned" integer not null,
+        "totalPoints" integer not null,
+        "usedPoints" integer not null,
+        "createdAt" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "nextTierDate" timestamp(6),
+        "updatedAt" timestamp(6) not null,
+        "userId" bigint not null,
+        "tier" varchar(255) not null check ("tier" in ('BRONZE','SILVER','GOLD','PLATINUM','DIAMOND')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,218 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "loyalty_transactions" (
+        "points" integer not null,
+        "createdAt" timestamp(6) not null,
+        "expiryDate" timestamp(6),
+        "id" bigint generated by default as identity,
+        "orderId" bigint,
+        "userId" bigint not null,
+        "description" varchar(255),
+        "referenceId" varchar(255),
+        "type" varchar(255) not null check ("type" in ('EARNED_ORDER','EARNED_REFERRAL','EARNED_BONUS','EARNED_REVIEW','REDEEMED_DISCOUNT','REDEEMED_DELIVERY','EXPIRED','ADJUSTMENT')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,225 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "membership_plan_features" (
+        "plan_id" bigint not null,
+        "feature" varchar(255)
+    )
+2025-11-07 17:44:51,228 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "membership_plans" (
+        "deliveryDiscount" numeric(5,2),
+        "earlyAccess" boolean not null,
+        "exclusiveDeals" boolean not null,
+        "foodDiscount" numeric(5,2),
+        "freeDelivery" boolean not null,
+        "isActive" boolean not null,
+        "isFeatured" boolean not null,
+        "loyaltyBonusMultiplier" boolean not null,
+        "loyaltyMultiplier" numeric(3,2),
+        "maxCancellations" integer,
+        "maxDeliveries" integer not null,
+        "maxOrders" integer not null,
+        "monthlyPrice" numeric(10,2) not null,
+        "priorityDeliveryMinutes" integer,
+        "prioritySupport" boolean not null,
+        "yearlyDiscount" numeric(5,2),
+        "yearlyPrice" numeric(10,2) not null,
+        "createdAt" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6) not null,
+        "color" varchar(255),
+        "description" "TEXT",
+        "displayName" varchar(255) not null,
+        "iconUrl" varchar(255),
+        "name" varchar(255) not null unique,
+        "tier" varchar(255) not null check ("tier" in ('FREE','BASIC','PREMIUM','VIP','ENTERPRISE')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,230 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    create table "membership_plans" (
+        "deliveryDiscount" numeric(5,2),
+        "earlyAccess" boolean not null,
+        "exclusiveDeals" boolean not null,
+        "foodDiscount" numeric(5,2),
+        "freeDelivery" boolean not null,
+        "isActive" boolean not null,
+        "isFeatured" boolean not null,
+        "loyaltyBonusMultiplier" boolean not null,
+        "loyaltyMultiplier" numeric(3,2),
+        "maxCancellations" integer,
+        "maxDeliveries" integer not null,
+        "maxOrders" integer not null,
+        "monthlyPrice" numeric(10,2) not null,
+        "priorityDeliveryMinutes" integer,
+        "prioritySupport" boolean not null,
+        "yearlyDiscount" numeric(5,2),
+        "yearlyPrice" numeric(10,2) not null,
+        "createdAt" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6) not null,
+        "color" varchar(255),
+        "description" "TEXT",
+        "displayName" varchar(255) not null,
+        "iconUrl" varchar(255),
+        "name" varchar(255) not null unique,
+        "tier" varchar(255) not null check ("tier" in ('FREE','BASIC','PREMIUM','VIP','ENTERPRISE')),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 961]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    create table "membership_plans" (
+        "deliveryDiscount" numeric(5,2),
+        "earlyAccess" boolean not null,
+        "exclusiveDeals" boolean not null,
+        "foodDiscount" numeric(5,2),
+        "freeDelivery" boolean not null,
+        "isActive" boolean not null,
+        "isFeatured" boolean not null,
+        "loyaltyBonusMultiplier" boolean not null,
+        "loyaltyMultiplier" numeric(3,2),
+        "maxCancellations" integer,
+        "maxDeliveries" integer not null,
+        "maxOrders" integer not null,
+        "monthlyPrice" numeric(10,2) not null,
+        "priorityDeliveryMinutes" integer,
+        "prioritySupport" boolean not null,
+        "yearlyDiscount" numeric(5,2),
+        "yearlyPrice" numeric(10,2) not null,
+        "createdAt" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6) not null,
+        "color" varchar(255),
+        "description" "TEXT",
+        "displayName" varchar(255) not null,
+        "iconUrl" varchar(255),
+        "name" varchar(255) not null unique,
+        "tier" varchar(255) not null check ("tier" in ('FREE','BASIC','PREMIUM','VIP','ENTERPRISE')),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 961]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createTables(SchemaCreatorImpl.java:430)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createSequencesTablesConstraints(SchemaCreatorImpl.java:346)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: type "TEXT" does not exist
+  Position: 961
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 44 common frames omitted
+2025-11-07 17:44:51,231 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "newsletter_subscriptions" (
+        "is_active" boolean,
+        "id" bigint generated by default as identity,
+        "subscribed_at" timestamp(6) not null,
+        "email" varchar(255) not null unique,
+        "ip_address" varchar(255),
+        "source" varchar(255),
+        "user_agent" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,238 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "notifications" (
+        "read_status" boolean not null,
+        "created_at" timestamp(6) not null,
+        "delivery_id" bigint,
+        "expires_at" timestamp(6),
+        "id" bigint generated by default as identity,
+        "order_id" bigint,
+        "read_at" timestamp(6),
+        "user_id" bigint not null,
+        "title" varchar(200) not null,
+        "message" "TEXT" not null,
+        "metadata" "TEXT",
+        "priority" varchar(255) not null check ("priority" in ('LOW','NORMAL','HIGH','URGENT')),
+        "type" varchar(255) not null check ("type" in ('ORDER_PLACED','ORDER_CONFIRMED','ORDER_PREPARING','ORDER_READY','ORDER_PICKED_UP','ORDER_OUT_FOR_DELIVERY','ORDER_DELIVERED','ORDER_CANCELLED','PAYMENT_SUCCESS','PAYMENT_FAILED','PAYMENT_REFUND','DELIVERY_LOCATION_UPDATE','DELIVERY_DELAY','DELIVERY_PARTNER_ASSIGNED','PROMOTION','DISCOUNT_AVAILABLE','SYSTEM_ANNOUNCEMENT','MAINTENANCE_SCHEDULED','SUBSCRIPTION_REMINDER','SUBSCRIPTION_EXPIRED','LOYALTY_POINTS_EARNED','LOYALTY_REWARD_AVAILABLE','REVIEW_REQUEST','CHAT_MESSAGE','FRIEND_RECOMMENDATION','SECURITY_ALERT','LOGIN_ALERT','PASSWORD_CHANGED','PROFILE_UPDATED','NEW_ORDER_RESTAURANT','ORDER_CANCELLED_RESTAURANT','MENU_UPDATE_APPROVED','DELIVERY_REQUEST','DELIVERY_COMPLETED','EARNINGS_UPDATE')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,241 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    create table "notifications" (
+        "read_status" boolean not null,
+        "created_at" timestamp(6) not null,
+        "delivery_id" bigint,
+        "expires_at" timestamp(6),
+        "id" bigint generated by default as identity,
+        "order_id" bigint,
+        "read_at" timestamp(6),
+        "user_id" bigint not null,
+        "title" varchar(200) not null,
+        "message" "TEXT" not null,
+        "metadata" "TEXT",
+        "priority" varchar(255) not null check ("priority" in ('LOW','NORMAL','HIGH','URGENT')),
+        "type" varchar(255) not null check ("type" in ('ORDER_PLACED','ORDER_CONFIRMED','ORDER_PREPARING','ORDER_READY','ORDER_PICKED_UP','ORDER_OUT_FOR_DELIVERY','ORDER_DELIVERED','ORDER_CANCELLED','PAYMENT_SUCCESS','PAYMENT_FAILED','PAYMENT_REFUND','DELIVERY_LOCATION_UPDATE','DELIVERY_DELAY','DELIVERY_PARTNER_ASSIGNED','PROMOTION','DISCOUNT_AVAILABLE','SYSTEM_ANNOUNCEMENT','MAINTENANCE_SCHEDULED','SUBSCRIPTION_REMINDER','SUBSCRIPTION_EXPIRED','LOYALTY_POINTS_EARNED','LOYALTY_REWARD_AVAILABLE','REVIEW_REQUEST','CHAT_MESSAGE','FRIEND_RECOMMENDATION','SECURITY_ALERT','LOGIN_ALERT','PASSWORD_CHANGED','PROFILE_UPDATED','NEW_ORDER_RESTAURANT','ORDER_CANCELLED_RESTAURANT','MENU_UPDATE_APPROVED','DELIVERY_REQUEST','DELIVERY_COMPLETED','EARNINGS_UPDATE')),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 402]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    create table "notifications" (
+        "read_status" boolean not null,
+        "created_at" timestamp(6) not null,
+        "delivery_id" bigint,
+        "expires_at" timestamp(6),
+        "id" bigint generated by default as identity,
+        "order_id" bigint,
+        "read_at" timestamp(6),
+        "user_id" bigint not null,
+        "title" varchar(200) not null,
+        "message" "TEXT" not null,
+        "metadata" "TEXT",
+        "priority" varchar(255) not null check ("priority" in ('LOW','NORMAL','HIGH','URGENT')),
+        "type" varchar(255) not null check ("type" in ('ORDER_PLACED','ORDER_CONFIRMED','ORDER_PREPARING','ORDER_READY','ORDER_PICKED_UP','ORDER_OUT_FOR_DELIVERY','ORDER_DELIVERED','ORDER_CANCELLED','PAYMENT_SUCCESS','PAYMENT_FAILED','PAYMENT_REFUND','DELIVERY_LOCATION_UPDATE','DELIVERY_DELAY','DELIVERY_PARTNER_ASSIGNED','PROMOTION','DISCOUNT_AVAILABLE','SYSTEM_ANNOUNCEMENT','MAINTENANCE_SCHEDULED','SUBSCRIPTION_REMINDER','SUBSCRIPTION_EXPIRED','LOYALTY_POINTS_EARNED','LOYALTY_REWARD_AVAILABLE','REVIEW_REQUEST','CHAT_MESSAGE','FRIEND_RECOMMENDATION','SECURITY_ALERT','LOGIN_ALERT','PASSWORD_CHANGED','PROFILE_UPDATED','NEW_ORDER_RESTAURANT','ORDER_CANCELLED_RESTAURANT','MENU_UPDATE_APPROVED','DELIVERY_REQUEST','DELIVERY_COMPLETED','EARNINGS_UPDATE')),
+        primary key ("id")
+    )" via JDBC [ERROR: type "TEXT" does not exist
+  Position: 402]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createTables(SchemaCreatorImpl.java:430)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createSequencesTablesConstraints(SchemaCreatorImpl.java:346)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:241)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: type "TEXT" does not exist
+  Position: 402
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 44 common frames omitted
+2025-11-07 17:44:51,243 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "order_items" (
+        "quantity" integer not null,
+        "totalPrice" numeric(38,2) not null,
+        "unitPrice" numeric(38,2) not null,
+        "dish_id" bigint not null,
+        "id" bigint generated by default as identity,
+        "order_id" bigint not null,
+        primary key ("id")
+    )
+2025-11-07 17:44:51,247 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "orders" (
+        "totalAmount" numeric(38,2) not null,
+        "createdAt" timestamp(6) not null,
+        "deliveryTime" timestamp(6),
+        "delivery_address_id" bigint,
+        "id" bigint generated by default as identity,
+        "orderTime" timestamp(6) not null,
+        "user_id" bigint,
+        "paymentId" varchar(255),
+        "paymentMethod" varchar(255) not null check ("paymentMethod" in ('UPI','CARD','WALLET','COD')),
+        "paymentStatus" varchar(255) not null,
+        "specialInstructions" varchar(255),
+        "status" varchar(255) not null check ("status" in ('PENDING','CONFIRMED','PREPARING','OUT_FOR_DELIVERY','DELIVERED','CANCELLED')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,256 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "payments" (
+        "amount" numeric(38,2),
+        "createdAt" timestamp(6),
+        "updatedAt" timestamp(6),
+        "currency" varchar(255),
+        "failureReason" varchar(255),
+        "id" varchar(255) not null,
+        "orderId" varchar(255),
+        "paymentMethod" varchar(255),
+        "paymentMethodDetails" varchar(255),
+        "receiptUrl" varchar(255),
+        "status" varchar(255),
+        "transactionId" varchar(255),
+        "userId" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,263 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "reviews" (
+        "isVerifiedOrder" boolean not null,
+        "rating" integer not null,
+        "createdAt" timestamp(6),
+        "dishId" bigint,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6),
+        "comment" varchar(255),
+        "userId" varchar(255),
+        "userName" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,269 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "uploaded_images" (
+        "fileSize" bigint,
+        "id" bigint generated by default as identity,
+        "updatedAt" timestamp(6),
+        "uploadedAt" timestamp(6),
+        "category" varchar(50) not null,
+        "contentType" varchar(100),
+        "image_id" varchar(100) not null,
+        "filename" varchar(255) not null,
+        "fileData" "bytea",
+        primary key ("id"),
+        unique ("category", "image_id")
+    )
+2025-11-07 17:44:51,277 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "user_memberships" (
+        "autoRenewal" boolean not null,
+        "cancellationsUsed" integer not null,
+        "deliveriesUsed" integer not null,
+        "discountAmount" numeric(10,2),
+        "ordersUsed" integer not null,
+        "paidAmount" numeric(10,2) not null,
+        "totalSavings" numeric(12,2) not null,
+        "cancelledAt" timestamp(6),
+        "createdAt" timestamp(6) not null,
+        "endDate" timestamp(6) not null,
+        "id" bigint generated by default as identity,
+        "nextBillingDate" timestamp(6),
+        "plan_id" bigint not null,
+        "startDate" timestamp(6) not null,
+        "updatedAt" timestamp(6) not null,
+        "userId" bigint not null,
+        "billingCycle" varchar(255) not null check ("billingCycle" in ('MONTHLY','YEARLY')),
+        "cancellationReason" varchar(255),
+        "paymentTransactionId" varchar(255),
+        "promoCode" varchar(255),
+        "status" varchar(255) not null check ("status" in ('ACTIVE','EXPIRED','CANCELLED','SUSPENDED','PENDING_PAYMENT','TRIAL')),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,284 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create table "users" (
+        "active" boolean,
+        "emailVerified" boolean,
+        "phoneVerified" boolean,
+        "createdAt" timestamp(6),
+        "id" bigint generated by default as identity,
+        "lastLoginAt" timestamp(6),
+        "updatedAt" timestamp(6),
+        "preferredLanguage" varchar(10),
+        "phoneNumber" varchar(15) unique,
+        "role" varchar(20) not null check ("role" in ('USER','PREMIUM_USER','DELIVERY_PERSON','RESTAURANT_PARTNER','ADMIN','SUPER_ADMIN')),
+        "firstName" varchar(50),
+        "lastName" varchar(50),
+        "email" varchar(100) not null unique,
+        "password" varchar(255) not null,
+        "profileImageUrl" varchar(255),
+        primary key ("id")
+    )
+2025-11-07 17:44:51,293 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create index idx_address_user 
+       on "addresses" ("user_id")
+2025-11-07 17:44:51,297 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create index idx_address_default 
+       on "addresses" ("user_id", "isDefault")
+2025-11-07 17:44:51,300 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create index idx_user_email 
+       on "users" ("email")
+2025-11-07 17:44:51,303 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create index idx_user_phone 
+       on "users" ("phoneNumber")
+2025-11-07 17:44:51,305 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    create index idx_user_role 
+       on "users" ("role")
+2025-11-07 17:44:51,308 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "addresses" 
+       add constraint "FK1o3cf1oq29twu2e49lxh6u8pg" 
+       foreign key ("user_id") 
+       references "users"
+2025-11-07 17:44:51,319 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "dish_dietary_tags" 
+       add constraint "FKkcjtpklna4ym5c19ym2pmjkuq" 
+       foreign key ("dish_id") 
+       references "dishes"
+2025-11-07 17:44:51,322 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "dish_tags" 
+       add constraint "FK8fenw11chwbd31jgayrx86vll" 
+       foreign key ("dish_id") 
+       references "dishes"
+2025-11-07 17:44:51,325 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "membership_plan_features" 
+       add constraint "FKsny3a8mx1j0x10oy32nbv53x0" 
+       foreign key ("plan_id") 
+       references "membership_plans"
+2025-11-07 17:44:51,327 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table if exists "membership_plan_features" 
+       add constraint "FKsny3a8mx1j0x10oy32nbv53x0" 
+       foreign key ("plan_id") 
+       references "membership_plans"" via JDBC [ERROR: relation "membership_plans" does not exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table if exists "membership_plan_features" 
+       add constraint "FKsny3a8mx1j0x10oy32nbv53x0" 
+       foreign key ("plan_id") 
+       references "membership_plans"" via JDBC [ERROR: relation "membership_plans" does not exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createForeignKeys(SchemaCreatorImpl.java:307)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:253)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: relation "membership_plans" does not exist
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 43 common frames omitted
+2025-11-07 17:44:51,328 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "order_items" 
+       add constraint "FKrnpho6nwth59gol8v9lyjb9sj" 
+       foreign key ("dish_id") 
+       references "dishes"
+2025-11-07 17:44:51,331 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "order_items" 
+       add constraint "FK6gg8woymk43fp55jtjlgkd1eh" 
+       foreign key ("order_id") 
+       references "orders"
+2025-11-07 17:44:51,333 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "orders" 
+       add constraint "FK35r28bu0fnis2c0ed2pels2mb" 
+       foreign key ("delivery_address_id") 
+       references "addresses"
+2025-11-07 17:44:51,335 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "orders" 
+       add constraint "FKitd0598xtxfyrro0df4ey8kdd" 
+       foreign key ("user_id") 
+       references "users"
+2025-11-07 17:44:51,336 DEBUG [main] [trace=] [user=] org.hibernate.SQL - 
+    alter table if exists "user_memberships" 
+       add constraint "FK67d4njd6wxctoxt50x2j2ueyh" 
+       foreign key ("plan_id") 
+       references "membership_plans"
+2025-11-07 17:44:51,337 WARN  [main] [trace=] [user=] o.h.t.s.i.ExceptionHandlerLoggedImpl - GenerationTarget encountered exception accepting command : Error executing DDL "
+    alter table if exists "user_memberships" 
+       add constraint "FK67d4njd6wxctoxt50x2j2ueyh" 
+       foreign key ("plan_id") 
+       references "membership_plans"" via JDBC [ERROR: relation "membership_plans" does not exist]
+org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL "
+    alter table if exists "user_memberships" 
+       add constraint "FK67d4njd6wxctoxt50x2j2ueyh" 
+       foreign key ("plan_id") 
+       references "membership_plans"" via JDBC [ERROR: relation "membership_plans" does not exist]
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:94)
+	at org.hibernate.tool.schema.internal.Helper.applySqlString(Helper.java:233)
+	at org.hibernate.tool.schema.internal.Helper.applySqlStrings(Helper.java:217)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createForeignKeys(SchemaCreatorImpl.java:307)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.createFromMetadata(SchemaCreatorImpl.java:253)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.performCreation(SchemaCreatorImpl.java:174)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:144)
+	at org.hibernate.tool.schema.internal.SchemaCreatorImpl.doCreation(SchemaCreatorImpl.java:120)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.performDatabaseAction(SchemaManagementToolCoordinator.java:250)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.lambda$process$5(SchemaManagementToolCoordinator.java:144)
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429)
+	at org.hibernate.tool.schema.spi.SchemaManagementToolCoordinator.process(SchemaManagementToolCoordinator.java:141)
+	at org.hibernate.boot.internal.SessionFactoryObserverForSchemaExport.sessionFactoryCreated(SessionFactoryObserverForSchemaExport.java:37)
+	at org.hibernate.internal.SessionFactoryObserverChain.sessionFactoryCreated(SessionFactoryObserverChain.java:35)
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:324)
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:463)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1517)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
+	at com.tiffin.TiffinApiApplication.main(TiffinApiApplication.java:10)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102)
+	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64)
+	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40)
+Caused by: org.postgresql.util.PSQLException: ERROR: relation "membership_plans" does not exist
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2734)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2421)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:372)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:518)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:435)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:357)
+	at org.postgresql.jdbc.PgStatement.executeCachedSql(PgStatement.java:342)
+	at org.postgresql.jdbc.PgStatement.executeWithFlags(PgStatement.java:318)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:313)
+	at com.zaxxer.hikari.pool.ProxyStatement.execute(ProxyStatement.java:95)
+	at com.zaxxer.hikari.pool.HikariProxyStatement.execute(HikariProxyStatement.java)
+	at org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase.accept(GenerationTargetToDatabase.java:80)
+	... 43 common frames omitted
+2025-11-07 17:44:51,346 INFO  [main] [trace=] [user=] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-11-07 17:44:51,768 INFO  [main] [trace=] [user=] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-07 17:44:54,731 INFO  [main] [trace=] [user=] com.tiffin.config.RazorpayConfig - Initializing Razorpay client with key: rzp_****p8IS in test environment
+2025-11-07 17:44:54,732 INFO  [main] [trace=] [user=] com.tiffin.config.RazorpayConfig - Razorpay configuration validated successfully
+2025-11-07 17:44:54,913 INFO  [main] [trace=] [user=] com.tiffin.config.RazorpayConfig - Configured Razorpay client timeout: 30000 ms
+2025-11-07 17:44:54,913 INFO  [main] [trace=] [user=] com.tiffin.config.RazorpayConfig - Razorpay client initialized successfully
+2025-11-07 17:44:55,342 INFO  [main] [trace=] [user=] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-11-07 17:44:55,762 INFO  [main] [trace=] [user=] o.s.m.s.b.SimpleBrokerMessageHandler - Starting...
+2025-11-07 17:44:55,763 INFO  [main] [trace=] [user=] o.s.m.s.b.SimpleBrokerMessageHandler - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4451dade]]
+2025-11-07 17:44:55,764 INFO  [main] [trace=] [user=] o.s.m.s.b.SimpleBrokerMessageHandler - Started.
+2025-11-07 17:44:55,765 INFO  [main] [trace=] [user=] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8081"]
+2025-11-07 17:44:55,794 INFO  [main] [trace=] [user=] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8081 (http) with context path '/api'
+2025-11-07 17:44:55,805 INFO  [main] [trace=] [user=] com.tiffin.TiffinApiApplication - Started TiffinApiApplication in 10.024 seconds (process running for 10.517)
+2025-11-07 17:45:55,778 INFO  [MessageBroker-1] [trace=] [user=] o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2025-11-07 17:58:56,225 WARN  [TiffinHikariCP:housekeeper] [trace=] [user=] com.zaxxer.hikari.pool.HikariPool - TiffinHikariCP - Thread starvation or clock leap detected (housekeeper delta=1m6s207ms987µs200ns).
+2025-11-07 18:16:32,028 INFO  [MessageBroker-1] [trace=] [user=] o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 2, active threads = 1, queued tasks = 0, completed tasks = 1]
+2025-11-07 18:46:32,058 INFO  [MessageBroker-2] [trace=] [user=] o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 3, active threads = 1, queued tasks = 0, completed tasks = 2]
+2025-11-07 19:16:32,095 INFO  [MessageBroker-1] [trace=] [user=] o.s.w.s.c.WebSocketMessageBrokerStats - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 4, active threads = 1, queued tasks = 0, completed tasks = 3]

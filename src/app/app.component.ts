@@ -4,6 +4,9 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ImageService } from './core/services/image.service';
 import { FaviconService } from './core/services/favicon.service';
+import { AuthUtilsService } from './core/services/auth-utils.service';
+import { AuthService } from './core/services/auth.service';
+import { UserProfile } from './core/models';
 
 @Component({
   selector: 'app-root',
@@ -17,14 +20,21 @@ export class AppComponent implements OnInit, OnDestroy {
   hideShell = false;
   private platformId = inject(PLATFORM_ID);
   private imageUpdateSubscription?: Subscription;
+  private authSubscription?: Subscription;
   logoUrl = '';
+  
+  // Auth-related properties
+  isLoggedIn = false;
+  currentUser: UserProfile | null = null;
 
   constructor(
-    private router: Router,
+    public router: Router,
     public imageService: ImageService,
-    private faviconService: FaviconService
+    private faviconService: FaviconService,
+    public authUtils: AuthUtilsService,
+    private authService: AuthService
   ) {
-    console.log('[AppComponent] Constructed');
+    console.log('[AppComponent] 🚀 Constructor called - Build timestamp:', new Date().toISOString());
     
     // Initialize logo URL
     this.logoUrl = this.imageService.getLogo();
@@ -36,8 +46,8 @@ export class AppComponent implements OnInit, OnDestroy {
         console.log('[Router] RoutesRecognized', event.urlAfterRedirects);
       } else if (event instanceof NavigationEnd) {
         console.log('[Router] NavigationEnd at', event.urlAfterRedirects);
-        // Hide header/nav on splash and onboarding
-        this.hideShell = ['/splash', '/onboarding'].includes(event.urlAfterRedirects);
+        // Hide header/nav on splash, onboarding, and landing pages
+        this.hideShell = ['/splash', '/onboarding', '/landing'].includes(event.urlAfterRedirects);
       } else if (event instanceof NavigationCancel) {
         console.warn('[Router] NavigationCancel:', event.reason);
       } else if (event instanceof NavigationError) {
@@ -49,8 +59,65 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     console.log('[AppComponent] ngOnInit called');
     
-    // Initialize favicon in browser only
+    // Make auth service globally accessible for debugging
     if (isPlatformBrowser(this.platformId)) {
+      (window as any).authService = this.authService;
+      console.log('[AppComponent] AuthService attached to window for debugging');
+    }
+    
+    // Subscribe to auth state changes
+    this.authSubscription = this.authService.user$.subscribe((user) => {
+      this.currentUser = user;
+      this.isLoggedIn = !!user;
+      console.log('[AppComponent] Auth state updated:', { 
+        isLoggedIn: this.isLoggedIn, 
+        user: user?.name || user?.phone || 'null',
+        hasUser: !!user
+      });
+    });
+    
+    // Immediate browser check (client-side only)
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('[AppComponent] Browser platform detected, performing immediate auth check');
+      
+      // Check localStorage directly for debugging
+      const token = localStorage.getItem('authToken');
+      const userProfile = localStorage.getItem('userProfile');
+      console.log('[AppComponent] localStorage check:', {
+        hasToken: !!token,
+        hasUser: !!userProfile,
+        tokenValue: token ? 'Present' : 'Missing'
+      });
+      
+      // If we have stored auth data, update state immediately
+      if (token && userProfile) {
+        try {
+          const user = JSON.parse(userProfile);
+          console.log('[AppComponent] Found stored auth data, updating state immediately');
+          this.currentUser = user;
+          this.isLoggedIn = true;
+        } catch (error) {
+          console.error('[AppComponent] Error parsing stored user profile:', error);
+        }
+      }
+      
+      // Initialize favicon in browser only
+      setTimeout(() => {
+        console.log('[AppComponent] Platform is browser, initializing favicon');
+        this.faviconService.initialize();
+      }, 100);
+    } else {
+      console.log('[AppComponent] Platform is server, skipping favicon');
+    }
+    
+    // Validate session on app start (delayed for proper initialization)
+    setTimeout(() => {
+      if (isPlatformBrowser(this.platformId)) {
+        console.log('[AppComponent] Performing delayed session validation');
+        this.authService.validateSession();
+      }
+    }, 200);
+  }
       console.log('[AppComponent] Platform is browser, initializing favicon');
       this.faviconService.initFavicon();
     } else {
@@ -68,6 +135,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.imageUpdateSubscription?.unsubscribe();
+    this.authSubscription?.unsubscribe();
   }
 
   reloadLogo() {
@@ -88,16 +156,66 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Keep parity with App (standalone root) so template references resolve in tooling
+  // Navigate to account with authentication check
   goToAccount(event?: Event) {
     if (event) event.preventDefault();
-    const loggedIn = typeof window !== 'undefined' && !!window.localStorage && window.localStorage.getItem('isLoggedIn') === 'true';
-    this.router.navigate([ loggedIn ? '/account' : '/auth/signup' ]);
+    
+    // Use the same auth state as UI display for consistency
+    if (this.isLoggedIn) {
+      console.log('[AppComponent] User authenticated, navigating to account');
+      this.router.navigate(['/account']);
+    } else {
+      console.log('[AppComponent] User not authenticated, redirecting to login');
+      // Redirect to login page for authentication
+      this.router.navigate(['/auth/login']);
+    }
   }
 
   goToHome(event?: Event) {
     if (event) event.preventDefault();
-    this.router.navigate(['/home']);
+    
+    // Use the same auth state as UI display for consistency
+    if (this.isLoggedIn) {
+      console.log('[AppComponent] User authenticated, navigating to dashboard');
+      this.router.navigate(['/dashboard']);
+    } else {
+      console.log('[AppComponent] User not authenticated, redirecting to home');
+      this.router.navigate(['/home']);
+    }
+  }
+
+  logout() {
+    console.log('[AppComponent] Logout initiated');
+    this.authService.logout();
+    
+    // Navigate to home page after logout
+    this.router.navigate(['/home']).then(() => {
+      console.log('[AppComponent] Successfully navigated to home after logout');
+    });
+  }
+
+  getUserDisplayName(): string {
+    if (!this.currentUser) return 'User';
+    return this.currentUser.name || this.currentUser.phone || 'User';
+  }
+
+  goToOrders(event?: Event) {
+    if (event) event.preventDefault();
+    if (this.isLoggedIn) {
+      this.router.navigate(['/orders']);
+    } else {
+      this.router.navigate(['/auth/login']);
+    }
+  }
+
+  goToLogin(event?: Event) {
+    if (event) event.preventDefault();
+    this.router.navigate(['/auth/login']);
+  }
+
+  goToAuth(event?: Event) {
+    if (event) event.preventDefault();
+    this.router.navigate(['/auth/signup']);
   }
 
   onLogoLoad(event: Event) {

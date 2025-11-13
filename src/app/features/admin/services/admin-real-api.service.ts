@@ -462,32 +462,19 @@ export class AdminService {
     return this.apiService.delete<void>(`/dishes/${itemId}`);
   }
 
-  // Menu Categories (mock implementation for now)
+  // Menu Categories - Using real API
   getMenuCategories(): Observable<MenuCategory[]> {
-    // Mock categories - in a real app this would come from an API
-    const mockCategories: MenuCategory[] = [
-      {
-        id: 'cat-1',
-        name: 'North Indian',
-        description: 'Traditional North Indian dishes',
-        displayOrder: 1,
-        active: true,
-        status: 'active',
-        image: '/assets/images/north-indian.jpg',
-        itemCount: 25
-      },
-      {
-        id: 'cat-2',
-        name: 'South Indian',
-        description: 'Authentic South Indian cuisine',
-        displayOrder: 2,
-        active: true,
-        status: 'active',
-        image: '/assets/images/south-indian.jpg',
-        itemCount: 18
-      }
-    ];
-    return of(mockCategories);
+    console.log('[AdminRealApiService] getMenuCategories() - Fetching from API');
+    return this.apiService.get<MenuCategory[]>('/admin/menu/categories').pipe(
+      tap({
+        next: (categories) => console.log('[AdminRealApiService] Menu categories loaded:', categories.length),
+        error: (error) => console.error('[AdminRealApiService] Error loading categories:', error)
+      }),
+      catchError((error) => {
+        console.error('[AdminRealApiService] getMenuCategories() failed, returning empty array:', error);
+        return of([]);
+      })
+    );
   }
 
   deleteMenuCategory(categoryId: string): Observable<void> {

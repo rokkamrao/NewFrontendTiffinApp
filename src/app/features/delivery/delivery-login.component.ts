@@ -331,7 +331,7 @@ export class DeliveryLoginComponent {
       password: this.password
     };
 
-    this.authService.login(loginRequest).subscribe({
+    this.authService.login(this.phone, this.password).subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.success) {

@@ -1,15 +1,37 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from './core/guards/role.guard';
 import { authGuard } from './core/guards/auth.guard';
-// Routes configuration
+import { guestGuard } from './core/guards/guest.guard';
+
+// 🎯 CENTRALIZED ROUTES WITH PROPER AUTH GUARDS
 export const routes: Routes = [
 	{ path: '', pathMatch: 'full', redirectTo: 'home' },
+	{ path: 'auth-redirect', loadComponent: () => import('./shared/components/auth-redirect.component').then(m=>m.AuthRedirectComponent) },
+	{ path: 'landing', loadComponent: () => import('./features/landing/landing.component').then(m=>m.LandingComponent) },
 	{ path: 'splash', loadComponent: () => import('./features/splash/splash.component').then(m=>m.SplashComponent) },
 	{ path: 'onboarding', loadComponent: () => import('./features/onboarding/onboarding.component').then(m=>m.OnboardingComponent) },
-	{ path: 'auth/signup', loadComponent: () => import('./features/auth/signup.component').then(m=>m.SignupComponent) },
-	{ path: 'auth/login', loadComponent: () => import('./features/auth/login.component').then(m=>m.LoginComponent) },
-	{ path: 'auth/forgot-password', loadComponent: () => import('./features/auth/forgot-password.component').then(m=>m.ForgotPasswordComponent) },
-	{ path: 'auth/verify-otp', loadComponent: () => import('./features/auth/otp.component').then(m=>m.VerifyOtpComponent) },
+	
+	// 🔴 AUTH ROUTES - Protected with guestGuard (logged-in users redirected to account)
+	{ 
+		path: 'auth/signup', 
+		canActivate: [guestGuard],
+		loadComponent: () => import('./features/auth/signup.component').then(m=>m.SignupComponent) 
+	},
+	{ 
+		path: 'auth/login', 
+		canActivate: [guestGuard],
+		loadComponent: () => import('./features/auth/login.component').then(m=>m.LoginComponent) 
+	},
+	{ 
+		path: 'auth/forgot-password', 
+		canActivate: [guestGuard],
+		loadComponent: () => import('./features/auth/forgot-password.component').then(m=>m.ForgotPasswordComponent) 
+	},
+	{ 
+		path: 'auth/verify-otp', 
+		canActivate: [guestGuard],
+		loadComponent: () => import('./features/auth/otp.component').then(m=>m.VerifyOtpComponent) 
+	},
 	{ path: 'auth/admin-login', loadComponent: () => import('./features/admin/admin-login.component').then(m=>m.AdminLoginComponent) },
 	{ path: 'auth/delivery-login', loadComponent: () => import('./features/delivery/delivery-login.component').then(m=>m.DeliveryLoginComponent) },
 	
@@ -19,15 +41,29 @@ export const routes: Routes = [
 		loadComponent: () => import('./shared/components/dashboard-redirect.component').then(m => m.DashboardRedirectComponent)
 	},
 	
-	{ path: 'home', loadComponent: () => import('./features/home/home.component').then(m=>m.HomeComponent) },
+	// 🌍 PUBLIC ROUTES (no auth required)
+	{ path: 'home', loadComponent: () => import('./features/landing/landing.component').then(m=>m.LandingComponent) },
 	{ path: 'menu', loadComponent: () => import('./features/menu/menu.component').then(m=>m.MenuComponent) },
 	{ path: 'menu/:id', loadComponent: () => import('./features/menu/menu-detail.component').then(m=>m.MenuDetailComponent) },
+	{ path: 'subscription', loadComponent: () => import('./features/subscription/subscription').then(m=>m.SubscriptionComponent) },
+	{ path: 'support', loadComponent: () => import('./features/support/support.component').then(m=>m.SupportComponent) },
+	
+	// 🟢 PROTECTED ROUTES (require authentication)
+	{ 
+		path: 'user-dashboard',
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/home/home.component').then(m=>m.HomeComponent) 
+	},
 	{ 
 		path: 'recommendations', 
 		canActivate: [authGuard],
 		loadComponent: () => import('./features/recommendations/ai-recommendations.component').then(m=>m.AiRecommendationsComponent) 
 	},
-	{ path: 'cart', loadComponent: () => import('./features/cart/cart.component').then(m=>m.CartComponent) },
+	{ 
+		path: 'cart', 
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/cart/cart.component').then(m=>m.CartComponent) 
+	},
 	{ 
 		path: 'checkout', 
 		canActivate: [authGuard],
@@ -43,7 +79,21 @@ export const routes: Routes = [
 		canActivate: [authGuard],
 		loadComponent: () => import('./features/checkout/payment-success.component').then(m=>m.PaymentSuccessComponent) 
 	},
-	{ path: 'subscription', loadComponent: () => import('./features/subscription/subscription.component').then(m=>m.SubscriptionComponent) },
+	{ 
+		path: 'subscription/checkout', 
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/subscription/subscription-checkout.component').then(m=>m.SubscriptionCheckoutComponent) 
+	},
+	{ 
+		path: 'subscription/payment', 
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/subscription/subscription-payment.component').then(m=>m.SubscriptionPaymentComponent) 
+	},
+	{ 
+		path: 'subscription/success', 
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/subscription/subscription-success.component').then(m=>m.SubscriptionSuccessComponent) 
+	},
 	{ 
 		path: 'orders', 
 		canActivate: [authGuard],
@@ -64,30 +114,29 @@ export const routes: Routes = [
 		canActivate: [authGuard],
 		loadComponent: () => import('./features/account/account.component').then(m=>m.AccountComponent) 
 	},
-	{ path: 'auth/otp', loadComponent: () => import('./features/auth/otp.component').then(m=>m.VerifyOtpComponent) },
+	{ 
+		path: 'profile', 
+		canActivate: [authGuard],
+		loadComponent: () => import('./features/profile/profile').then(m=>m.Profile) 
+	},
 	{ 
 		path: 'tracking/:id', 
 		canActivate: [authGuard],
 		loadComponent: () => import('./features/tracking/tracking.component').then(m=>m.TrackingComponent) 
 	},
-	// { 
-	// 	path: 'notifications', 
-	// 	canActivate: [authGuard],
-	// 	loadComponent: () => import('./features/notifications/notifications.component').then(m=>m.NotificationsComponent) 
-	// },
-	{ path: 'support', loadComponent: () => import('./features/support/support.component').then(m=>m.SupportComponent) },
 
-	// Admin routes - Protected with role guard
+	// 🔧 ROLE-BASED PROTECTED ROUTES
 	{ 
 		path: 'admin', 
 		canActivate: [(route, state) => roleGuard(['ADMIN'])(route, state)],
 		loadChildren: () => import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES)
 	},
-
-	// Delivery Partner App - Protected with role guard
 	{
 		path: 'delivery',
 		canActivate: [(route, state) => roleGuard(['DELIVERY', 'DELIVERY_PARTNER'])(route, state)],
 		loadChildren: () => import('./features/delivery/delivery.routes').then(m => m.DELIVERY_ROUTES)
 	},
+
+	// Legacy routes for backward compatibility
+	{ path: 'auth/otp', redirectTo: 'auth/verify-otp' },
 ];

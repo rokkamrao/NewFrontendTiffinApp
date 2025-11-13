@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -345,10 +345,11 @@ import { AuthService } from '../../core/services/auth.service';
     }
   `]
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
 
   submitting = false;
   errorMessage = '';
@@ -357,6 +358,27 @@ export class ForgotPasswordComponent {
   passwordVisible = false;
   confirmVisible = false;
   phoneNumber = '';
+
+  ngOnInit(): void {
+    console.log('[ForgotPassword] ngOnInit - Checking if user is already logged in');
+    
+    // Only perform authentication check in browser (not during SSR)
+    if (isPlatformBrowser(this.platformId)) {
+      const isAuthenticated = this.authService.isLoggedIn();
+      console.log('[ForgotPassword] Authentication status:', isAuthenticated);
+      
+      if (isAuthenticated) {
+        console.log('[ForgotPassword] User already logged in, redirecting to home');
+        // User is already logged in, redirect them to home page
+        this.router.navigate(['/home']);
+        return;
+      }
+      
+      console.log('[ForgotPassword] User not authenticated, showing forgot password form');
+    } else {
+      console.log('[ForgotPassword] SSR detected, skipping auth check');
+    }
+  }
 
   form = this.fb.group({
     phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],

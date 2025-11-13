@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, isDevMode, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { SessionService } from './core/services/session.service';
 
 import { routes } from './app.routes';
@@ -15,7 +15,7 @@ function initializeSession(sessionService: SessionService) {
   return () => {
     // SessionService constructor already handles initialization
     // This just ensures it's instantiated early in the app lifecycle
-    console.log('[AppConfig] SessionService initialized');
+    console.log('[AppConfig] 🚀 SessionService initialized');
     return Promise.resolve();
   };
 }
@@ -25,7 +25,15 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    
+    // 🔐 HTTP CLIENT WITH TOKEN INTERCEPTOR
+    provideHttpClient(withInterceptorsFromDi()),
+    { 
+      provide: HTTP_INTERCEPTORS, 
+      useClass: TokenInterceptor, 
+      multi: true 
+    },
+    
     // Initialize SessionService on app startup for auto-login
     {
       provide: APP_INITIALIZER,

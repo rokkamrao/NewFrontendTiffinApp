@@ -3,14 +3,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import {
+import { 
   UserProfile,
   AuthResponse,
   OtpRequest,
   OtpVerificationRequest,
   SignUpRequest,
   SignInRequest
-} from '../models';
+} from '../models/index';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -28,52 +28,7 @@ export class AuthService {
     private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    console.log('[AuthService] 🚀 Constructor called, platform:', isPlatformBrowser(this.platformId) ? 'Browser' : 'Server');
-    
-    // Initialize auth state immediately and with retries for browser platform
-    if (isPlatformBrowser(this.platformId)) {
-      console.log('[AuthService] 🔄 Browser detected, initializing auth state immediately');
-      this.initializeAuthState();
-      
-      // Also add delayed initialization in case the first one happens too early
-      setTimeout(() => {
-        console.log('[AuthService] 🔄 Delayed auth state initialization (50ms)');
-        this.refreshAuthState();
-      }, 50);
-      
-      // Add another check after 200ms
-      setTimeout(() => {
-        console.log('[AuthService] 🔄 Secondary auth state check (200ms)');
-        this.refreshAuthState();
-      }, 200);
-    } else {
-      console.log('[AuthService] 🖥️ Server detected, skipping initialization');
-    }
-  }
-  
-  private refreshAuthState(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      try {
-        const token = localStorage.getItem(this.TOKEN_KEY);
-        const userJson = localStorage.getItem(this.USER_KEY);
-        
-        console.log('[AuthService] 🔍 Refresh auth state check:', {
-          hasToken: !!token,
-          hasUser: !!userJson,
-          currentUserValue: this.userSubject.value ? this.userSubject.value.name : 'null'
-        });
-        
-        if (token && userJson && !this.userSubject.value) {
-          console.log('[AuthService] 🔄 Found stored auth data but subject is null, reinitializing');
-          this.initializeAuthState();
-        } else if (!token || !userJson) {
-          console.log('[AuthService] 🧹 No stored auth data, ensuring user is logged out');
-          this.userSubject.next(null);
-        }
-      } catch (error) {
-        console.error('[AuthService] ⚠️ Error in refresh auth state:', error);
-      }
-    }
+    this.initializeAuthState();
   }
 
   private initializeAuthState(): void {
@@ -92,48 +47,14 @@ export class AuthService {
       if (token && userJson) {
         const user = JSON.parse(userJson) as UserProfile;
         console.log('[AuthService] ✅ Restoring user session:', user);
-        
-        // Check if token is expired
-        if (this.isTokenExpired(token)) {
-          console.log('[AuthService] ❌ Token expired, clearing auth data');
-          this.clearAuthData();
-          this.userSubject.next(null);
-          return;
-        }
-        
         this.userSubject.next(user);
       } else {
         console.log('[AuthService] ❌ No valid session found');
-        this.clearAuthData();
         this.userSubject.next(null);
       }
     } catch (error) {
       console.error('[AuthService] ⚠️ Error initializing auth state:', error);
       this.clearAuthData();
-      this.userSubject.next(null);
-    }
-  }
-
-  private isTokenExpired(token: string): boolean {
-    try {
-      const payload = this.decodeJwt(token);
-      if (!payload || !payload.exp) return false;
-      
-      const currentTime = Math.floor(Date.now() / 1000);
-      return payload.exp < currentTime;
-    } catch (error) {
-      console.error('[AuthService] Error checking token expiration:', error);
-      return true; // Treat invalid tokens as expired
-    }
-  }
-
-  private decodeJwt(token: string): any | null {
-    try {
-      const payload = token.split('.')[1];
-      const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-      return JSON.parse(decodeURIComponent(escape(json)));
-    } catch (e) {
-      return null;
     }
   }
 
@@ -157,24 +78,10 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     if (!isPlatformBrowser(this.platformId)) return false;
-    
-    const token = this.getToken();
-    const user = this.getCurrentUser();
-    
-    if (!token || !user) {
-      console.log('[AuthService] 🔍 No token or user found');
-      return false;
-    }
-    
-    // Check if token is expired
-    if (this.isTokenExpired(token)) {
-      console.log('[AuthService] 🔍 Token expired, auto-logout');
-      this.logout();
-      return false;
-    }
-    
-    console.log('[AuthService] 🔍 User is logged in:', { user: user.name || user.phone });
-    return true;
+    const hasToken = !!this.getToken();
+    const hasUser = !!this.getCurrentUser();
+    console.log('[AuthService] 🔍 Checking login status:', { hasToken, hasUser });
+    return hasToken && hasUser;
   }
 
   public getToken(): string | null {
@@ -240,11 +147,6 @@ export class AuthService {
     console.log('[AuthService] 🚪 Logging out user');
     this.clearAuthData();
     this.userSubject.next(null);
-    
-    // Also clear any session service data
-    if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('tiffin_session');
-    }
   }
 
   public signIn(request: SignInRequest): Observable<AuthResponse> {
@@ -254,8 +156,6 @@ export class AuthService {
   public signOut(): void {
     this.logout();
   }
-
-
 
   public sendOtp(request: OtpRequest): Observable<AuthResponse> {
     return this.api.post<any>('/auth/send-otp', request).pipe(
@@ -345,52 +245,6 @@ export class AuthService {
   public storeToken(token: string): void {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem(this.TOKEN_KEY, token);
-      console.log('[AuthService] Token stored:', token.substring(0, 20) + '...');
-    }
-  }
-  
-  public setAuthData(token: string, user: UserProfile): void {
-    console.log('[AuthService] Setting complete auth data for user:', user.name);
-    this.storeAuthData(token, user);
-    this.userSubject.next(user);
-  }
-
-  public validateSession(): boolean {
-    console.log('[AuthService] 🔍 Validating current session');
-    return this.isLoggedIn();
-  }
-
-  public forceRefreshState(): void {
-    console.log('[AuthService] 🔄 Force refreshing auth state from storage');
-    this.refreshAuthState();
-  }
-
-  public debugAuthState(): void {
-    console.log('[AuthService] 🐛 DEBUG AUTH STATE:');
-    console.log('  - Platform is browser:', isPlatformBrowser(this.platformId));
-    
-    if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem(this.TOKEN_KEY);
-      const userJson = localStorage.getItem(this.USER_KEY);
-      console.log('  - Token in storage:', token ? 'YES' : 'NO');
-      console.log('  - User in storage:', userJson ? 'YES' : 'NO');
-      console.log('  - Token length:', token?.length || 0);
-      console.log('  - Current user from subject:', this.userSubject.value);
-      console.log('  - isLoggedIn() result:', this.isLoggedIn());
-      
-      if (token) {
-        console.log('  - Token preview:', token.substring(0, 50) + '...');
-      }
-      if (userJson) {
-        try {
-          const user = JSON.parse(userJson);
-          console.log('  - Stored user:', user);
-        } catch (e) {
-          console.log('  - User JSON parse error:', e);
-        }
-      }
-    } else {
-      console.log('  - Running in SSR mode');
     }
   }
 }
