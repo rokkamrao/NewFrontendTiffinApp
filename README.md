@@ -50,6 +50,25 @@ Backend API will be available at `http://localhost:8081/api`
 - **Razorpay** - Payment integration
 - **Maven** - Dependency management
 
+## ✅ **Recent Fixes & Updates**
+
+### **Authentication State Synchronization** (Latest)
+- Fixed browser authentication state not updating after login
+- Added real-time auth status observables for instant UI updates  
+- Enhanced authentication persistence across page refreshes
+- Improved SSR vs browser environment compatibility
+- See `AUTHENTICATION_FIXES.md` for detailed technical documentation
+
+### **Subscription Flow Enhancements**
+- Added fallback subscription plans for offline/API failure scenarios
+- Implemented checkout page protection (no direct access without plan selection)
+- Enhanced plan validation and error handling
+
+### **Logo & Branding**
+- Improved logo loading with fallback system (default "T" → custom logo)
+- Fixed logo visibility issues in browser vs development environments
+- Added proper error handling for image loading failures
+
 ## 📱 **Features**
 
 ### **Customer App:**
@@ -233,9 +252,60 @@ docker-compose up -d
 
 ## 📄 **Documentation**
 
+- [`AUTHENTICATION_FIXES.md`](./AUTHENTICATION_FIXES.md) - Latest authentication state synchronization fixes
+- [`BROWSER_AUTH_DEBUG.md`](./BROWSER_AUTH_DEBUG.md) - Step-by-step browser debugging guide
+- [`browser-auth-test.js`](./browser-auth-test.js) - Automated test script for browser console
 - [`IMPLEMENTATION_CHANGELOG.md`](./IMPLEMENTATION_CHANGELOG.md) - Complete implementation details
 - [`ADMIN_IMPLEMENTATION_COMPLETE.md`](./ADMIN_IMPLEMENTATION_COMPLETE.md) - Admin dashboard documentation
 - [`ADMIN_DESIGN_SPECS.md`](./ADMIN_DESIGN_SPECS.md) - Design system specifications
+
+## 🔧 **Troubleshooting**
+
+### **Authentication Issues**
+```bash
+# Check auth state in browser console
+window.authService.debugAuthState();
+
+# Verify localStorage data
+localStorage.getItem('authToken');
+localStorage.getItem('userProfile');
+```
+
+### **Logo Not Loading**
+- Check network tab for `/api/images/branding/logo` requests
+- Verify backend API is running on port 8081
+- Check browser console for loading errors
+
+### **Development Server Issues**
+```bash
+# Clear Angular cache
+ng cache clean
+
+# Reinstall dependencies  
+rm -rf node_modules package-lock.json
+npm install
+
+# Reset build
+ng build --configuration development
+```
+
+### **Authentication State Not Updating**
+- Refresh page after login - state should persist
+- Check browser console for auth subscription logs
+- Verify JWT token hasn't expired
+- Use the browser test script: Copy contents of `browser-auth-test.js` into browser console
+- Run `testAuth.full()` in console for comprehensive authentication test
+
+### **Quick Debug Commands**
+```javascript
+// In browser console at http://localhost:4200
+// Check auth state
+window.authService.debugAuthState();
+
+// Force refresh auth state  
+window.authService.forceAuthStateFromStorage();
+window.appComponent.debugForceAuthRefresh();
+```
 
 ## 📞 **Support**
 

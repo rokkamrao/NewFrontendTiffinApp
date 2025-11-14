@@ -19,6 +19,10 @@ import { ApiService } from './api.service';
 export class AuthService {
   private userSubject = new BehaviorSubject<UserProfile | null>(null);
   public user$ = this.userSubject.asObservable();
+  
+  // Add auth status observable
+  private authStatusSubject = new BehaviorSubject<boolean>(false);
+  public authStatus = this.authStatusSubject.asObservable();
 
   private readonly TOKEN_KEY = 'authToken';
   private readonly USER_KEY = 'userProfile';
@@ -46,8 +50,38 @@ export class AuthService {
         console.log('[AuthService] 🔄 Secondary auth state check (200ms)');
         this.refreshAuthState();
       }, 200);
+      
+      // Add a final check after 1 second to ensure browser is ready
+      setTimeout(() => {
+        console.log('[AuthService] 🔄 Final auth state check (1000ms)');
+        this.forceAuthStateCheck();
+      }, 1000);
     } else {
       console.log('[AuthService] 🖥️ Server detected, skipping initialization');
+    }
+  }
+  
+  
+  private forceAuthStateCheck(): void {
+    console.log('[AuthService] 🔄 Forcing auth state check');
+    if (!isPlatformBrowser(this.platformId)) return;
+    
+    try {
+      const token = localStorage.getItem(this.TOKEN_KEY);
+      const userJson = localStorage.getItem(this.USER_KEY);
+      
+      if (token && userJson && !this.userSubject.value) {
+        const user = JSON.parse(userJson);
+        console.log('[AuthService] 🔄 Found stored auth but no current user, forcing update:', user.name || user.phone);
+        
+        // Force update both subjects
+        this.userSubject.next(user);
+        this.authStatusSubject.next(true);
+        
+        console.log('[AuthService] 🔄 Forced auth state updated');
+      }
+    } catch (error) {
+      console.error('[AuthService] 🔄 Error in force auth check:', error);
     }
   }
   
@@ -69,6 +103,7 @@ export class AuthService {
         } else if (!token || !userJson) {
           console.log('[AuthService] 🧹 No stored auth data, ensuring user is logged out');
           this.userSubject.next(null);
+          this.authStatusSubject.next(false); // Update auth status
         }
       } catch (error) {
         console.error('[AuthService] ⚠️ Error in refresh auth state:', error);
@@ -102,15 +137,19 @@ export class AuthService {
         }
         
         this.userSubject.next(user);
+        this.authStatusSubject.next(true); // Update auth status
+        console.log('[AuthService] ✅ Auth state initialized - user logged in:', user.name || user.phone);
       } else {
         console.log('[AuthService] ❌ No valid session found');
         this.clearAuthData();
         this.userSubject.next(null);
+        this.authStatusSubject.next(false); // Update auth status
       }
     } catch (error) {
       console.error('[AuthService] ⚠️ Error initializing auth state:', error);
       this.clearAuthData();
       this.userSubject.next(null);
+      this.authStatusSubject.next(false); // Update auth status
     }
   }
 
@@ -200,6 +239,7 @@ export class AuthService {
           console.log('[AuthService] ✅ Login successful, storing auth data');
           this.storeAuthData(response.data.token, response.data.user);
           this.userSubject.next(response.data.user);
+          this.authStatusSubject.next(true); // Update auth status
         } else {
           console.log('[AuthService] ❌ Login failed or incomplete data');
         }
@@ -229,6 +269,7 @@ export class AuthService {
         if (response.success && response.data?.token && response.data?.user) {
           this.storeAuthData(response.data.token, response.data.user);
           this.userSubject.next(response.data.user);
+          this.authStatusSubject.next(true); // Update auth status
         }
       }),
       map(response => response.success && response.data?.user ? response.data.user : null),
@@ -240,6 +281,7 @@ export class AuthService {
     console.log('[AuthService] 🚪 Logging out user');
     this.clearAuthData();
     this.userSubject.next(null);
+    this.authStatusSubject.next(false); // Update auth status
     
     // Also clear any session service data
     if (isPlatformBrowser(this.platformId)) {
@@ -273,6 +315,7 @@ export class AuthService {
         if (response.success && response.data?.token && response.data?.user) {
           this.storeAuthData(response.data.token, response.data.user);
           this.userSubject.next(response.data.user);
+          this.authStatusSubject.next(true); // Update auth status
         }
       }),
       map(response => ({
@@ -353,6 +396,7 @@ export class AuthService {
     console.log('[AuthService] Setting complete auth data for user:', user.name);
     this.storeAuthData(token, user);
     this.userSubject.next(user);
+    this.authStatusSubject.next(true); // Update auth status
   }
 
   public validateSession(): boolean {
@@ -376,6 +420,7 @@ export class AuthService {
       console.log('  - User in storage:', userJson ? 'YES' : 'NO');
       console.log('  - Token length:', token?.length || 0);
       console.log('  - Current user from subject:', this.userSubject.value);
+      console.log('  - Current auth status:', this.authStatusSubject.value);
       console.log('  - isLoggedIn() result:', this.isLoggedIn());
       
       if (token) {

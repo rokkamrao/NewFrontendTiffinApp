@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     
     // Initialize logo URL
     this.logoUrl = this.imageService.getLogo();
+    console.log('[AppComponent] Logo URL initialized:', this.logoUrl);
     
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
@@ -62,14 +63,23 @@ export class AppComponent implements OnInit, OnDestroy {
     // Make auth service globally accessible for debugging
     if (isPlatformBrowser(this.platformId)) {
       (window as any).authService = this.authService;
-      console.log('[AppComponent] AuthService attached to window for debugging');
+      (window as any).appComponent = this;
+      console.log('[AppComponent] AuthService and AppComponent attached to window for debugging');
     }
     
-    // Subscribe to auth state changes
+    // Subscribe to auth state changes - use ONLY user$ as single source of truth
     this.authSubscription = this.authService.user$.subscribe((user) => {
+      console.log('[AppComponent] 🔄 User$ subscription triggered:', { 
+        user: user?.name || user?.phone || 'null',
+        hasUser: !!user,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Single source of truth for auth state
       this.currentUser = user;
       this.isLoggedIn = !!user;
-      console.log('[AppComponent] Auth state updated:', { 
+      
+      console.log('[AppComponent] ✅ Auth state updated from user$:', { 
         isLoggedIn: this.isLoggedIn, 
         user: user?.name || user?.phone || 'null',
         hasUser: !!user
@@ -89,22 +99,37 @@ export class AppComponent implements OnInit, OnDestroy {
         tokenValue: token ? 'Present' : 'Missing'
       });
       
+      // IMPORTANT: Clear any conflicting state first
+      this.isLoggedIn = false;
+      this.currentUser = null;
+      
       // If we have stored auth data, update state immediately
       if (token && userProfile) {
         try {
           const user = JSON.parse(userProfile);
           console.log('[AppComponent] Found stored auth data, updating state immediately');
-          this.currentUser = user;
-          this.isLoggedIn = true;
+          
+          // Also notify AuthService to update its status
+          this.authService.setAuthData(token, user);
+          
+          // The subscription will update our local state
+          console.log('[AppComponent] AuthService notified, waiting for subscription update...');
         } catch (error) {
           console.error('[AppComponent] Error parsing stored user profile:', error);
+          // Clear bad data
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('userProfile');
         }
+      } else {
+        console.log('[AppComponent] No stored auth data found, ensuring logged out state');
+        this.isLoggedIn = false;
+        this.currentUser = null;
       }
       
       // Initialize favicon in browser only
       setTimeout(() => {
         console.log('[AppComponent] Platform is browser, initializing favicon');
-        this.faviconService.initialize();
+        this.faviconService.initFavicon();
       }, 100);
     } else {
       console.log('[AppComponent] Platform is server, skipping favicon');
@@ -117,13 +142,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.authService.validateSession();
       }
     }, 200);
-  }
-      console.log('[AppComponent] Platform is browser, initializing favicon');
-      this.faviconService.initFavicon();
-    } else {
-      console.log('[AppComponent] Platform is server, skipping favicon');
-    }
-    
+
     // Subscribe to image updates
     this.imageUpdateSubscription = this.imageService.onImageUpdate$.subscribe(() => {
       console.log('[AppComponent] Image updated, reloading logo');
@@ -234,5 +253,45 @@ export class AppComponent implements OnInit, OnDestroy {
       imgElement.style.display = 'none';
       defaultLogo.style.display = 'flex';
     }
+  }
+  
+  // Debug method to force auth state refresh
+  debugForceAuthRefresh() {
+    console.log('[AppComponent] 🐛 Force auth refresh requested');
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('authToken');
+      const userProfile = localStorage.getItem('userProfile');
+      
+      console.log('[AppComponent] 🐛 Current localStorage state:', {
+        hasToken: !!token,
+        hasUser: !!userProfile,
+        currentIsLoggedIn: this.isLoggedIn,
+        currentUser: this.currentUser
+      });
+      
+      if (token && userProfile) {
+        try {
+          const user = JSON.parse(userProfile);
+          console.log('[AppComponent] 🐛 Forcing auth state update');
+          this.authService.setAuthData(token, user);
+          console.log('[AppComponent] 🐛 Auth state force updated');
+        } catch (error) {
+          console.error('[AppComponent] 🐛 Error in force refresh:', error);
+        }
+      } else {
+        console.log('[AppComponent] 🐛 No auth data found in localStorage');
+      }
+    }
+  }
+  
+  // Debug method to completely clear auth state
+  debugClearAuthState() {
+    console.log('[AppComponent] 🧹 Clearing all auth state');
+    this.isLoggedIn = false;
+    this.currentUser = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userProfile');
+    this.authService.logout();
+    console.log('[AppComponent] 🧹 Auth state cleared');
   }
 }
