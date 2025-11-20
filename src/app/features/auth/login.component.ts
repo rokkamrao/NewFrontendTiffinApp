@@ -124,7 +124,6 @@ export class LoginComponent implements OnInit {
     this.state.errorMessage = '';
 
     console.log('[Login] 🔑 Sending OTP to phone:', this.state.phone);
-    console.log('[Login] 🔗 Backend URL: http://localhost:8081/api/auth/send-otp');
     console.log('[Login] 🎯 Current return URL:', this.returnUrl);
 
     this.authService.sendOtp({ phone: this.state.phone }).subscribe({

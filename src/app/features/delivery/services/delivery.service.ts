@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 import { 
   DeliveryPartner, 
   DeliveryPartnerLoginRequest, 
@@ -25,7 +26,7 @@ interface ApiResponse<T> {
   providedIn: 'root'
 })
 export class DeliveryService {
-  private readonly baseUrl = 'http://localhost:8080/api/delivery';
+  private readonly baseUrl = `${environment.apiUrl}/delivery`;
   private readonly useMockData = false; // Use real API data only
   
   private currentPartnerSubject = new BehaviorSubject<DeliveryPartner | null>(null);
