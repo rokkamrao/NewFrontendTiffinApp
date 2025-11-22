@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from '../../core/guards/auth.guard';
 
 export const DELIVERY_ROUTES: Routes = [
   {
@@ -7,14 +8,17 @@ export const DELIVERY_ROUTES: Routes = [
   },
   {
     path: 'dashboard',
+    canActivate: [authGuard],
     loadComponent: () => import('./dashboard/delivery-dashboard.component').then(m => m.DeliveryDashboardComponent)
   },
   {
     path: 'orders',
+    canActivate: [authGuard],
     loadComponent: () => import('./orders/delivery-orders.component').then(m => m.DeliveryOrdersComponent)
   },
   {
     path: 'order/:id',
+    canActivate: [authGuard],
     loadComponent: () => import('./orders/delivery-order-detail.component').then(m => m.DeliveryOrderDetailComponent)
   },
   {

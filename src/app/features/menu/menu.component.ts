@@ -68,8 +68,8 @@ export class MenuComponent implements OnInit {
     const dishId = String(dish.id);
     if(!(this.quantities[dishId] > 0)) return;
     this.quantities[dishId]--;
-    if(this.quantities[dishId] === 0) this.cart.remove(dishId);
-    else this.cart.updateQty(dishId, this.quantities[dishId]);
+    if(this.quantities[dishId] === 0) this.cart.remove(dish.id);
+    else this.cart.updateQty(dish.id, this.quantities[dishId]);
   }
 
   getTotalItems(): number {

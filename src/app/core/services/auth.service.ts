@@ -277,6 +277,77 @@ export class AuthService {
     );
   }
 
+  /**
+   * Validate session with backend
+   */
+  public validateSessionWithBackend(): Observable<boolean> {
+    const token = this.getToken();
+    if (!token) {
+      console.log('[AuthService] 🔍 No token found for validation');
+      return of(false);
+    }
+
+    console.log('[AuthService] 🔍 Validating session with backend');
+    return this.api.get<AuthResponse>('/auth/validate-session').pipe(
+      tap(response => {
+        console.log('[AuthService] 🔍 Backend validation response:', response);
+        if (response.success && response.data?.user) {
+          // Update user data from backend
+          this.userSubject.next(response.data.user);
+          this.authStatusSubject.next(true);
+          this.storeAuthData(token, response.data.user);
+        } else {
+          // Invalid session, clear data
+          console.log('[AuthService] ❌ Session invalid, clearing data');
+          this.clearAuthData();
+          this.userSubject.next(null);
+          this.authStatusSubject.next(false);
+        }
+      }),
+      map(response => response.success),
+      catchError(error => {
+        console.error('[AuthService] ❌ Session validation failed:', error);
+        this.clearAuthData();
+        this.userSubject.next(null);
+        this.authStatusSubject.next(false);
+        return of(false);
+      })
+    );
+  }
+
+  /**
+   * Enhanced logout with backend notification
+   */
+  public logoutWithBackend(): Observable<boolean> {
+    console.log('[AuthService] 🚪 Logout with backend notification');
+    
+    const token = this.getToken();
+    if (token) {
+      return this.api.post<AuthResponse>('/auth/logout', {}).pipe(
+        tap(() => {
+          console.log('[AuthService] ✅ Backend notified of logout');
+        }),
+        map(response => response.success),
+        catchError(error => {
+          console.error('[AuthService] ⚠️ Backend logout notification failed:', error);
+          return of(true); // Still logout locally even if backend fails
+        }),
+        tap(() => {
+          // Always clear local data
+          this.clearAuthData();
+          this.userSubject.next(null);
+          this.authStatusSubject.next(false);
+        })
+      );
+    } else {
+      // No token, just clear local data
+      this.clearAuthData();
+      this.userSubject.next(null);
+      this.authStatusSubject.next(false);
+      return of(true);
+    }
+  }
+
   public logout(): void {
     console.log('[AuthService] 🚪 Logging out user');
     this.clearAuthData();

@@ -47,6 +47,8 @@ export const routes: Routes = [
 	{ path: 'menu/:id', loadComponent: () => import('./features/menu/menu-detail.component').then(m=>m.MenuDetailComponent) },
 	{ path: 'subscription', loadComponent: () => import('./features/subscription/subscription').then(m=>m.SubscriptionComponent) },
 	{ path: 'support', loadComponent: () => import('./features/support/support.component').then(m=>m.SupportComponent) },
+	{ path: 'integration-test', loadComponent: () => import('./features/integration-test/integration-test.component').then(m=>m.IntegrationTestComponent) },
+	{ path: 'e2e-test', loadComponent: () => import('./features/e2e-test/e2e-test.component').then(m=>m.E2eTestComponent) },
 	
 	// 🟢 PROTECTED ROUTES (require authentication)
 	{ 

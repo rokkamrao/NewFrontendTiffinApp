@@ -2,20 +2,24 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChang
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
-import { SessionService } from './core/services/session.service';
+import { AuthService } from './core/services/auth.service';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay, withHttpTransferCacheOptions } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 
 /**
- * Initialize SessionService on app startup to restore any existing session
+ * 🚀 Initialize AuthService on app startup for auto-login
+ * This ensures user sessions are restored immediately when the app loads
  */
-function initializeSession(sessionService: SessionService) {
+function initializeAuth(authService: AuthService): () => Promise<void> {
   return () => {
-    // SessionService constructor already handles initialization
-    // This just ensures it's instantiated early in the app lifecycle
-    console.log('[AppConfig] 🚀 SessionService initialized');
+    console.log('[AppConfig] 🚀 Initializing AuthService for session restoration');
+    
+    // The AuthService constructor already handles initialization
+    // This ensures it's instantiated early and ready before routing begins
+    authService.debugAuthState();
+    
     return Promise.resolve();
   };
 }
@@ -34,13 +38,14 @@ export const appConfig: ApplicationConfig = {
       multi: true 
     },
     
-    // Initialize SessionService on app startup for auto-login
+    // 🚀 Initialize AuthService on app startup for session restoration
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeSession,
-      deps: [SessionService],
+      useFactory: initializeAuth,
+      deps: [AuthService],
       multi: true
     },
+    
     provideClientHydration(
       withEventReplay(),
       withHttpTransferCacheOptions({

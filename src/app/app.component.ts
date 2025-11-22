@@ -86,69 +86,92 @@ export class AppComponent implements OnInit, OnDestroy {
       });
     });
     
-    // Immediate browser check (client-side only)
+    // Enhanced session initialization for browser platform
     if (isPlatformBrowser(this.platformId)) {
-      console.log('[AppComponent] Browser platform detected, performing immediate auth check');
+      console.log('[AppComponent] 🌐 Browser platform detected, initializing session');
       
-      // Check localStorage directly for debugging
-      const token = localStorage.getItem('authToken');
-      const userProfile = localStorage.getItem('userProfile');
-      console.log('[AppComponent] localStorage check:', {
-        hasToken: !!token,
-        hasUser: !!userProfile,
-        tokenValue: token ? 'Present' : 'Missing'
-      });
+      // Step 1: Initialize auth state from localStorage
+      this.initializeSessionFromStorage();
       
-      // IMPORTANT: Clear any conflicting state first
-      this.isLoggedIn = false;
-      this.currentUser = null;
+      // Step 2: Validate session with backend (delayed for better UX)
+      setTimeout(() => {
+        this.validateSessionWithBackend();
+      }, 500);
       
-      // If we have stored auth data, update state immediately
-      if (token && userProfile) {
-        try {
-          const user = JSON.parse(userProfile);
-          console.log('[AppComponent] Found stored auth data, updating state immediately');
-          
-          // Also notify AuthService to update its status
-          this.authService.setAuthData(token, user);
-          
-          // The subscription will update our local state
-          console.log('[AppComponent] AuthService notified, waiting for subscription update...');
-        } catch (error) {
-          console.error('[AppComponent] Error parsing stored user profile:', error);
-          // Clear bad data
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('userProfile');
-        }
-      } else {
-        console.log('[AppComponent] No stored auth data found, ensuring logged out state');
-        this.isLoggedIn = false;
-        this.currentUser = null;
-      }
-      
-      // Initialize favicon in browser only
+      // Initialize favicon
       setTimeout(() => {
         console.log('[AppComponent] Platform is browser, initializing favicon');
         this.faviconService.initFavicon();
       }, 100);
     } else {
-      console.log('[AppComponent] Platform is server, skipping favicon');
+      console.log('[AppComponent] Platform is server, skipping session initialization');
     }
-    
-    // Validate session on app start (delayed for proper initialization)
-    setTimeout(() => {
-      if (isPlatformBrowser(this.platformId)) {
-        console.log('[AppComponent] Performing delayed session validation');
-        this.authService.validateSession();
-      }
-    }, 200);
 
     // Subscribe to image updates
     this.imageUpdateSubscription = this.imageService.onImageUpdate$.subscribe(() => {
       console.log('[AppComponent] Image updated, reloading logo');
       this.logoUrl = this.imageService.getLogo();
-      // Force re-render by updating the img src
       this.reloadLogo();
+    });
+  }
+
+  /**
+   * Initialize session from stored data (immediate)
+   */
+  private initializeSessionFromStorage(): void {
+    console.log('[AppComponent] 🔄 Initializing session from localStorage');
+    
+    try {
+      const token = localStorage.getItem('authToken');
+      const userProfile = localStorage.getItem('userProfile');
+      
+      console.log('[AppComponent] 📋 localStorage check:', {
+        hasToken: !!token,
+        hasUser: !!userProfile,
+        tokenLength: token?.length || 0
+      });
+      
+      if (token && userProfile) {
+        const user = JSON.parse(userProfile);
+        console.log('[AppComponent] ✅ Found stored session, updating auth service');
+        
+        // Update auth service immediately for instant UI updates
+        this.authService.setAuthData(token, user);
+      } else {
+        console.log('[AppComponent] ❌ No stored session found');
+        this.authService.logout();
+      }
+    } catch (error) {
+      console.error('[AppComponent] ⚠️ Error initializing session from storage:', error);
+      // Clear corrupted data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userProfile');
+      this.authService.logout();
+    }
+  }
+
+  /**
+   * Validate session with backend (delayed)
+   */
+  private validateSessionWithBackend(): void {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      console.log('[AppComponent] 🔍 No token found, skipping backend validation');
+      return;
+    }
+
+    console.log('[AppComponent] 🔍 Validating session with backend');
+    this.authService.validateSessionWithBackend().subscribe({
+      next: (isValid) => {
+        if (isValid) {
+          console.log('[AppComponent] ✅ Session validated successfully');
+        } else {
+          console.log('[AppComponent] ❌ Session validation failed, user logged out');
+        }
+      },
+      error: (error) => {
+        console.error('[AppComponent] ⚠️ Session validation error:', error);
+      }
     });
   }
 
@@ -204,12 +227,24 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    console.log('[AppComponent] Logout initiated');
-    this.authService.logout();
+    console.log('[AppComponent] 🚪 Enhanced logout initiated');
     
-    // Navigate to home page after logout
-    this.router.navigate(['/home']).then(() => {
-      console.log('[AppComponent] Successfully navigated to home after logout');
+    // Use enhanced logout with backend notification
+    this.authService.logoutWithBackend().subscribe({
+      next: (success) => {
+        console.log('[AppComponent] ✅ Logout completed, success:', success);
+        
+        // Navigate to home page after logout
+        this.router.navigate(['/home']).then(() => {
+          console.log('[AppComponent] 🏠 Successfully navigated to home after logout');
+        });
+      },
+      error: (error) => {
+        console.error('[AppComponent] ⚠️ Logout error:', error);
+        
+        // Still navigate to home even if logout had issues
+        this.router.navigate(['/home']);
+      }
     });
   }
 

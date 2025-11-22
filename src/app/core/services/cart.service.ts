@@ -23,13 +23,13 @@ export class CartService {
     this.save();
   }
 
-  updateQty(dishId: string, qty: number){
+  updateQty(dishId: number, qty: number){
     const items = this._items.value.map(i => i.dish.id === dishId ? { ...i, qty } : i);
     this._items.next(items);
     this.save();
   }
 
-  remove(dishId: string){
+  remove(dishId: number){
     const items = this._items.value.filter(i => i.dish.id !== dishId);
     this._items.next(items);
     this.save();

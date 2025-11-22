@@ -1,99 +1,93 @@
-# 🍽️ TiffinApp - Food Delivery & Subscription Platform
+# 🍽️ TiffinApp - Frontend
 
-A comprehensive food delivery and tiffin service platform built with **Angular 18** and **Spring Boot 3.5.2**.
+**Modern Angular food delivery platform with comprehensive session management**
 
-## 🚀 **Quick Start**
-
-### **Prerequisites**
-- Node.js 18+ and npm
-- Java 21+
-- PostgreSQL 18+
-- Git
-
-### **Frontend Development Server**
+## 🚀 Quick Start
 
 ```bash
-# Install dependencies
 npm install
-
-# Start development server
-ng serve
+ng serve  # http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+**Prerequisites**: Node.js 18+, Angular CLI
 
-### **Backend API Server**
+**Backend**: Start [tiffin-api](../tiffin-api) on port 8081
 
-```bash
-# Navigate to backend directory
-cd ../tiffin-api
+## 🔑 Demo Credentials
 
-# Start Spring Boot application
-mvn spring-boot:run
+**For testing and development, use these pre-configured accounts:**
+
+| Role | Email/Login | Password | Phone | Description |
+|------|-------------|----------|-------|--------------|
+| **Test User** | `test@tiffin.app` or `9999999999` | `test123` | `9999999999` | Primary test account for user features |
+| **Admin** | `admin@tiffin.app` | `admin123` | `9876543212` | Full admin dashboard access |
+| **Super Admin** | `superadmin@tiffin.app` | `superadmin123` | `9876543213` | Complete system administration |
+| **Regular User** | `john.customer@example.com` | `password123` | `9876543210` | Standard customer account |
+| **Premium User** | `priya.premium@example.com` | `password123` | `9876543211` | Premium subscription features |
+| **Delivery Person** | `delivery@tiffin.app` | `delivery123` | `9876543214` | Delivery partner dashboard |
+| **Restaurant Partner** | `partner@tiffin.app` | `partner123` | `9876543215` | Restaurant management access |
+
+**🔐 Authentication Notes:**
+- All passwords are encrypted in database using BCrypt
+- Use phone numbers for mobile app testing
+- Use email addresses for web app testing
+- Universal OTP `123456` works for any phone number in development
+- Accounts are automatically created on first server startup
+
+**🚀 Quick Test URLs:**
+- **User Login**: [http://localhost:4200/auth/login](http://localhost:4200/auth/login)
+- **Admin Login**: [http://localhost:4200/auth/admin-login](http://localhost:4200/auth/admin-login)
+- **Admin Dashboard**: [http://localhost:4200/admin/dashboard](http://localhost:4200/admin/dashboard)
+- **Integration Test**: [http://localhost:4200/integration-test](http://localhost:4200/integration-test)
+
+## ✅ Features
+
+### 🔐 **Authentication & Session Management**
+- JWT-based authentication with session persistence
+- Role-based access (User/Admin/Delivery)
+- Auto-session restoration across browser refreshes
+- Complete route protection
+
+### 🛒 **Core Features**
+- **Menu Browsing** - Search, filter, and browse dishes
+- **Shopping Cart** - Add/remove items with persistence
+- **Order Management** - Real-time tracking and history
+- **Payment Integration** - Razorpay payment gateway
+- **Subscription Plans** - Monthly/quarterly meal plans
+
+### 🎛️ **Admin Panel**
+- Real-time dashboard with analytics
+- Order management and status updates
+- Menu and dish management
+- User management with role controls
+- Delivery tracking and partner management
+
+### 🚚 **Delivery System**
+- Delivery partner dashboard
+- Order assignment and tracking
+- Status updates and communication
+
+## 🛠️ Tech Stack
+
+- **Angular 20+** with TypeScript
+- **Tailwind CSS** + Angular Material
+- **RxJS** for reactive programming
+- **JWT** authentication with session management
+- **PWA** capabilities with service worker
+
+## 🏗️ Project Structure
+
 ```
-
-Backend API will be available at `http://localhost:8081/api`
-
-## 🏗️ **Project Architecture**
-
-### **Frontend Stack:**
-- **Angular 18** - Standalone components with signals
-- **TypeScript 5.5** - Full type safety
-- **Tailwind CSS** - Utility-first styling
-- **Bootstrap 5** - UI components
-- **RxJS** - Reactive programming
-
-### **Backend Stack:**
-- **Spring Boot 3.5.2** - REST API framework
-- **PostgreSQL 18** - Primary database
-- **JWT** - Authentication & authorization
-- **Razorpay** - Payment integration
-- **Maven** - Dependency management
-
-## ✅ **Recent Fixes & Updates**
-
-### **Authentication State Synchronization** (Latest)
-- Fixed browser authentication state not updating after login
-- Added real-time auth status observables for instant UI updates  
-- Enhanced authentication persistence across page refreshes
-- Improved SSR vs browser environment compatibility
-- See `AUTHENTICATION_FIXES.md` for detailed technical documentation
-
-### **Subscription Flow Enhancements**
-- Added fallback subscription plans for offline/API failure scenarios
-- Implemented checkout page protection (no direct access without plan selection)
-- Enhanced plan validation and error handling
-
-### **Logo & Branding**
-- Improved logo loading with fallback system (default "T" → custom logo)
-- Fixed logo visibility issues in browser vs development environments
-- Added proper error handling for image loading failures
-
-## 📱 **Features**
-
-### **Customer App:**
-- 🔐 **User Authentication** - Phone/Email login with OTP
-- 🍽️ **Menu Browsing** - Search, filter, and browse dishes
-- 🛒 **Cart Management** - Add/remove items, quantity control
-- 📱 **Order Tracking** - Real-time order status updates
-- 💳 **Payment Integration** - Razorpay payment gateway
-- 📍 **Address Management** - Multiple delivery addresses
-- ⭐ **Reviews & Ratings** - Rate dishes and service
-
-### **Admin Dashboard:**
-- 📊 **Real-time Analytics** - Revenue, orders, user metrics
-- 📋 **Order Management** - Status updates, bulk operations
-- 🍽️ **Menu Management** - Add/edit dishes, pricing, availability
-- 👥 **User Management** - Customer and staff administration
-- 🚚 **Delivery Tracking** - Partner management and route tracking
-- 📈 **Business Intelligence** - Sales reports and insights
-- 🔔 **Notification System** - Push notifications and alerts
-
-### **Delivery Partner App:**
-- 📱 **Order Assignment** - View and accept delivery requests
-- 🗺️ **GPS Navigation** - Route optimization and tracking
-- 📞 **Customer Communication** - In-app messaging and calls
-- 💰 **Earnings Tracking** - Daily/weekly earnings reports
+src/app/
+├── auth/           # Authentication system  
+├── features/       # Feature modules
+│   ├── admin/      # Admin dashboard
+│   ├── cart/       # Shopping cart
+│   ├── checkout/   # Payment flow
+│   └── orders/     # Order management
+├── core/           # Guards, services, models
+└── shared/         # Shared components
+```
 
 ## 🛠️ **Development**
 
@@ -250,14 +244,24 @@ docker-compose up -d
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 **Documentation**
+## 📚 **Complete Documentation**
 
-- [`AUTHENTICATION_FIXES.md`](./AUTHENTICATION_FIXES.md) - Latest authentication state synchronization fixes
-- [`BROWSER_AUTH_DEBUG.md`](./BROWSER_AUTH_DEBUG.md) - Step-by-step browser debugging guide
-- [`browser-auth-test.js`](./browser-auth-test.js) - Automated test script for browser console
-- [`IMPLEMENTATION_CHANGELOG.md`](./IMPLEMENTATION_CHANGELOG.md) - Complete implementation details
-- [`ADMIN_IMPLEMENTATION_COMPLETE.md`](./ADMIN_IMPLEMENTATION_COMPLETE.md) - Admin dashboard documentation
-- [`ADMIN_DESIGN_SPECS.md`](./ADMIN_DESIGN_SPECS.md) - Design system specifications
+**📖 See [TIFFIN_PROJECT_DOCUMENTATION.md](../TIFFIN_PROJECT_DOCUMENTATION.md) for comprehensive project documentation including:**
+
+- 🔐 Authentication & Session Management
+- 🎛️ Admin Panel Implementation  
+- 🛒 Feature Implementation Status
+- 🚀 Deployment & Production Setup
+- 🔧 Technical Architecture
+- 🐛 Troubleshooting & Bug Fixes
+- 📋 API Documentation
+- 🧪 Testing & Quality Assurance
+
+## 🔗 Quick Links
+
+- **Main Documentation**: [`../TIFFIN_PROJECT_DOCUMENTATION.md`](../TIFFIN_PROJECT_DOCUMENTATION.md)
+- **Backend API**: [`../tiffin-api`](../tiffin-api)
+- **Archived Docs**: [`docs-archive/`](docs-archive/) - Old documentation files
 
 ## 🔧 **Troubleshooting**
 
@@ -316,37 +320,8 @@ For support and questions:
 
 ---
 
-## 🏆 **Project Status**
-
-**Current Version**: 1.0.0  
-**Status**: 95% Complete - Production Ready with Complete Backend  
-**Last Updated**: November 4, 2025
-
-### **✅ Completed Features:**
-- **User Authentication & Registration** - Phone/Email login with OTP verification
-- **Complete Backend Implementation** - All services, repositories, DTOs fully functional
-- **Menu Browsing & Cart Management** - Search, filter, and browse dishes with cart operations
-- **Order Placement & Tracking** - Real-time order status updates and management
-- **Admin Dashboard** - Real-time analytics with comprehensive management interface
-- **Payment Integration** - Enhanced Razorpay with validation and monitoring
-- **Address Management** - Geographic coordinates with delivery optimization
-- **Multi-channel Notifications** - WebSocket, email, SMS capabilities
-- **Enterprise Architecture** - Complete validation, error handling, and business logic
-- **Responsive Design** - Mobile-first approach with modern UI components
-
-### **🔄 Ready for Integration:**
-- **Frontend-Backend Connection** - API endpoints ready for integration
-- **Real-time Features** - WebSocket infrastructure implemented
-- **Sample Data Population** - Backend endpoint ready for execution
-- **Authentication Flow** - JWT token management ready for frontend implementation
-
-### **🔮 Future Enhancements:**
-- **Advanced Analytics** - Enhanced reporting and business intelligence
-- **Push Notifications** - Mobile and web push notification system
-- **Performance Optimization** - Advanced caching and scaling improvements
-- **Multi-language Support** - Internationalization features
-
 ---
 
-**Built with ❤️ for the food delivery industry**
-"# NewFrontendTiffinApp" 
+**📍 Current Status**: Production Ready with Complete Session Management  
+**🔄 Last Updated**: November 21, 2025  
+**📚 Documentation**: All project docs consolidated in [`../TIFFIN_PROJECT_DOCUMENTATION.md`](../TIFFIN_PROJECT_DOCUMENTATION.md) 
